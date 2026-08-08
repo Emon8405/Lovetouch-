@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Product Details | Lovetouch</title>
+  <meta name="description" content="View product details and shop on Lovetouch.">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #131921;
+      color: white;
+      padding: 12px 5%;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .logo {
+      color: #ff9900;
+      font-size: 28px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .search {
+      flex: 1;
+      display: flex;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search button {
+      background: #ff9900;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .cart {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    nav {
+      background: #232f3e;
+      padding: 12px 5%;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 25px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .breadcrumb {
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .product-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: 45% 55%;
+      gap: 40px;
+    }
+
+    .product-image {
+      height: 450px;
+      background: #f1f1f1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 150px;
+    }
+
+    .product-info h1 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .rating {
+      color: #f5a623;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .price {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .old-price {
+      color: #777;
+      text-decoration: line-through;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+
+    .discount {
+      color: #d62828;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .description {
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .stock {
+      color: green;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .quantity button {
+      width: 38px;
+      height: 38px;
+      border: 1px solid #ccc;
+      background: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .quantity span {
+      width: 40px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-cart {
+      background: #ffd814;
+    }
+
+    .buy-now {
+      background: #ff9900;
+    }
+
+    .back {
+      background: #232f3e;
+      color: white;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+
+    footer {
+      background: #131921;
+      color: white;
+      text-align: center;
+      padding: 35px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 800px) {
+      header {
+        flex-wrap: wrap;
+      }
+
+      .search {
+        order: 3;
+        flex-basis: 100%;
+      }
+
+      .product-box {
+        grid-template-columns: 1fr;
+      }
+
+      .product-image {
+        height: 300px;
+      }
+
+      .product-info h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <a href="index.html" class="logo">Lovetouch</a>
+
+  <div class="search">
+    <input type="text" placeholder="Search products...">
+    <button>🔍</button>
+  </div>
+
+  <a href="cart.html" class="cart">
+    🛒 Cart (<span id="cartCount">0</span>)
+  </a>
+
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="index.html#categories">Categories</a>
+  <a href="index.html#products">Products</a>
+  <a href="#">Deals</a>
+</nav>
+
+<main class="container">
+
+  <div class="breadcrumb">
+    Home / Electronics / Smartphone
+  </div>
+
+  <div class="product-box">
+
+    <div class="product-image">
+      📱
+    </div>
+
+    <div class="product-info">
+
+      <h1>Smartphone Pro Max</h1>
+
+      <div class="rating">
+        ⭐⭐⭐⭐⭐
+        <span style="color:#555;"> 4.8 (125 Reviews)</span>
+      </div>
+
+      <div class="price">
+        ৳25,999
+        <span class="old-price">৳29,999</span>
+      </div>
+
+      <div class="discount">
+        Save ৳4,000 — Limited Time Deal
+      </div>
+
+      <p class="description">
+        Experience powerful performance, a stunning display,
+        excellent camera quality and long-lasting battery life.
+        Perfect for everyday use, entertainment and work.
+      </p>
+
+      <div class="stock">
+        ✓ In Stock
+      </div>
+
+      <div class="quantity">
+
+        <strong>Quantity:</strong>
+
+        <button onclick="decreaseQuantity()">−</button>
+
+        <span id="quantity">1</span>
+
+        <button onclick="increaseQuantity()">+</button>
+
+      </div>
+
+      <div class="buttons">
+
+        <button class="btn add-cart" onclick="addToCart()">
+          🛒 Add to Cart
+        </button>
+
+        <button class="btn buy-now" onclick="buyNow()">
+          ⚡ Buy Now
+        </button>
+
+        <a href="index.html" class="btn back">
+          ← Continue Shopping
+        </a>
+
+      </div>
+
+      <div class="message" id="message">
+        ✓ Product added to cart!
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+
+  <h2>Lovetouch</h2>
+
+  <p>© 2026 Lovetouch. All Rights Reserved.</p>
+
+</footer>
+
+<script>
+
+  let quantity = 1;
+  let cartCount = 0;
+
+  function increaseQuantity() {
+
+    quantity++;
+
+    document.getElementById("quantity").textContent = quantity;
+
+  }
+
+  function decreaseQuantity() {
+
+    if (quantity > 1) {
+
+      quantity--;
+
+      document.getElementById("quantity").textContent = quantity;
+
+    }
+
+  }
+
+  function addToCart() {
+
+    cartCount += quantity;
+
+    document.getElementById("cartCount").textContent = cartCount;
+
+    const message =
+      document.getElementById("message");
+
+    message.style.display = "block";
+
+    setTimeout(function() {
+
+      message.style.display = "none";
+
+    }, 2000);
+
+  }
+
+  function buyNow() {
+
+    alert(
+      "Buy Now selected. Checkout will be added in the next step."
+    );
+
+  }
+
+</script>
+
+</body>
+  </html>
