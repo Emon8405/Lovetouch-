@@ -147,6 +147,12 @@ nav a{
   font-weight:bold;
   font-size:16px;
   margin-top:20px;
+  cursor:pointer;
+}
+
+.place-order:disabled{
+  opacity:.6;
+  cursor:not-allowed;
 }
 
 .empty{
@@ -177,6 +183,15 @@ nav a{
 .success-icon{
   font-size:70px;
   margin-bottom:15px;
+}
+
+.error-message{
+  display:none;
+  background:#ffe5e5;
+  color:#b00020;
+  padding:12px;
+  border-radius:6px;
+  margin-top:15px;
 }
 
 @media(max-width:800px){
@@ -257,8 +272,6 @@ Checkout
 <div id="checkoutContent">
 
 <div class="checkout-layout">
-
-<!-- CUSTOMER INFORMATION -->
 
 <div class="box">
 
@@ -386,15 +399,19 @@ id="online"
 <button
 type="submit"
 class="place-order"
+id="placeOrderButton"
 >
 Place Order
 </button>
 
+<div
+class="error-message"
+id="errorMessage"
+></div>
+
 </form>
 
 </div>
-
-<!-- ORDER SUMMARY -->
 
 <div class="box">
 
@@ -447,8 +464,6 @@ Total
 
 </div>
 
-<!-- EMPTY CART -->
-
 <div
 class="empty"
 id="emptyCart"
@@ -472,8 +487,6 @@ Start Shopping
 
 </div>
 
-<!-- SUCCESS -->
-
 <div
 class="success"
 id="success"
@@ -488,6 +501,10 @@ Order Placed Successfully!
 </h2>
 
 <p id="orderNumber">
+</p>
+
+<p>
+Your order has been saved successfully.
 </p>
 
 <p>
@@ -521,18 +538,32 @@ Lovetouch
 
 <script src="app.js"></script>
 
+<!-- Supabase -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 
-function loadOrder(){
+/*
+  LOVETOUCH SUPABASE CONFIG
+*/
 
-  const cart = getCart();
+const SUPABASE_URL =
+  "https://yaukdrdygrlpdrhzpbvv.supabase.co";
 
-  const container =
-    document.getElementById(
-      "orderItems"
-    );
 
-  container.innerHTML="";
+const SUPABASE_KEY =
+  "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+function getOrderTotals(cart){
 
   let subtotal = 0;
 
@@ -551,14 +582,65 @@ function loadOrder(){
       }
 
       const quantity =
-        cart[productId];
+        Number(cart[productId]) || 0;
+
+      subtotal +=
+        product.price * quantity;
+
+      count += quantity;
+
+    }
+  );
+
+  const delivery =
+    subtotal > 0 ? 100 : 0;
+
+  const total =
+    subtotal + delivery;
+
+  return {
+    subtotal,
+    delivery,
+    total,
+    count
+  };
+
+}
+
+
+function loadOrder(){
+
+  const cart = getCart();
+
+  const container =
+    document.getElementById(
+      "orderItems"
+    );
+
+  container.innerHTML="";
+
+  const totals =
+    getOrderTotals(cart);
+
+
+  Object.keys(cart).forEach(
+    function(productId){
+
+      const product =
+        products.find(
+          p => p.id === productId
+        );
+
+      if(!product){
+        return;
+      }
+
+      const quantity =
+        Number(cart[productId]) || 0;
 
       const itemTotal =
         product.price * quantity;
 
-      subtotal += itemTotal;
-
-      count += quantity;
 
       const item =
         document.createElement(
@@ -567,6 +649,7 @@ function loadOrder(){
 
       item.className =
         "order-item";
+
 
       item.innerHTML = `
 
@@ -581,12 +664,14 @@ function loadOrder(){
 
       `;
 
+
       container.appendChild(item);
 
     }
   );
 
-  if(count === 0){
+
+  if(totals.count === 0){
 
     document.getElementById(
       "checkoutContent"
@@ -600,34 +685,37 @@ function loadOrder(){
 
   }
 
-  const delivery =
-    subtotal > 0 ? 100 : 0;
 
   document.getElementById(
     "subtotal"
   ).textContent =
-    "৳" + subtotal.toLocaleString();
+    "৳" +
+    totals.subtotal.toLocaleString();
+
 
   document.getElementById(
     "delivery"
   ).textContent =
-    "৳" + delivery.toLocaleString();
+    "৳" +
+    totals.delivery.toLocaleString();
+
 
   document.getElementById(
     "total"
   ).textContent =
     "৳" +
-    (subtotal + delivery)
-    .toLocaleString();
+    totals.total.toLocaleString();
 
 }
 
 
-function placeOrder(event){
+async function placeOrder(event){
 
   event.preventDefault();
 
+
   const cart = getCart();
+
 
   if(
     Object.keys(cart).length === 0
@@ -641,25 +729,30 @@ function placeOrder(event){
 
   }
 
+
   const name =
     document.getElementById(
       "name"
     ).value.trim();
+
 
   const phone =
     document.getElementById(
       "phone"
     ).value.trim();
 
+
   const district =
     document.getElementById(
       "district"
     ).value;
 
+
   const address =
     document.getElementById(
       "address"
     ).value.trim();
+
 
   const payment =
     document.querySelector(
@@ -667,30 +760,182 @@ function placeOrder(event){
     ).value;
 
 
+  const totals =
+    getOrderTotals(cart);
+
+
   const orderId =
     "LT" +
     Date.now()
-    .toString()
-    .slice(-8);
+      .toString()
+      .slice(-8);
 
 
-  const order = {
+  const button =
+    document.getElementById(
+      "placeOrderButton"
+    );
 
-    id:orderId,
 
-    customer:{
-      name:name,
-      phone:phone,
-      district:district,
-      address:address
+  const errorBox =
+    document.getElementById(
+      "errorMessage"
+    );
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "Placing Order...";
+
+  errorBox.style.display =
+    "none";
+
+
+  /*
+    Save order to Supabase
+  */
+
+  const { data, error } =
+    await supabaseClient
+      .from("orders")
+      .insert({
+
+        order_id: orderId,
+
+        customer_name: name,
+
+        phone: phone,
+
+        district: district,
+
+        address: address,
+
+        payment_method: payment,
+
+        items: cart,
+
+        subtotal: totals.subtotal,
+
+        delivery: totals.delivery,
+
+        total: totals.total,
+
+        status: "New"
+
+      })
+      .select();
+
+
+  /*
+    If Supabase fails,
+    do NOT lose the customer order.
+  */
+
+  if(error){
+
+    console.error(
+      "Supabase error:",
+      error
+    );
+
+
+    /*
+      Keep local backup
+    */
+
+    const localOrder = {
+
+      id: orderId,
+
+      customer: {
+
+        name: name,
+
+        phone: phone,
+
+        district: district,
+
+        address: address
+
+      },
+
+      payment: payment,
+
+      items: cart,
+
+      date:
+        new Date()
+          .toISOString()
+
+    };
+
+
+    const orders =
+      JSON.parse(
+        localStorage.getItem(
+          "lovetouchOrders"
+        )
+      ) || [];
+
+
+    orders.push(
+      localOrder
+    );
+
+
+    localStorage.setItem(
+      "lovetouchOrders",
+      JSON.stringify(orders)
+    );
+
+
+    button.disabled = false;
+
+    button.textContent =
+      "Place Order";
+
+
+    errorBox.textContent =
+      "Order saved locally, but database connection failed. Please contact the store.";
+
+    errorBox.style.display =
+      "block";
+
+
+    return;
+
+  }
+
+
+  /*
+    Also keep a local copy
+    for the current Admin panel.
+  */
+
+  const localOrder = {
+
+    id: orderId,
+
+    customer: {
+
+      name: name,
+
+      phone: phone,
+
+      district: district,
+
+      address: address
+
     },
 
-    payment:payment,
+    payment: payment,
 
-    items:cart,
+    items: cart,
 
-    date:new Date()
-      .toISOString()
+    date:
+      new Date()
+        .toISOString()
 
   };
 
@@ -703,7 +948,9 @@ function placeOrder(event){
     ) || [];
 
 
-  orders.push(order);
+  orders.push(
+    localOrder
+  );
 
 
   localStorage.setItem(
@@ -712,18 +959,30 @@ function placeOrder(event){
   );
 
 
+  /*
+    Empty cart
+  */
+
   localStorage.removeItem(
     "lovetouchCart"
   );
 
 
+  /*
+    Show success
+  */
+
   document.getElementById(
     "checkoutContent"
-  ).style.display="none";
+  ).style.display =
+    "none";
+
 
   document.getElementById(
     "success"
-  ).style.display="block";
+  ).style.display =
+    "block";
+
 
   document.getElementById(
     "orderNumber"
