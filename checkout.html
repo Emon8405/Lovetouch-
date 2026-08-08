@@ -897,7 +897,7 @@ async function placeOrder(event){
 
 
     errorBox.textContent =
-      "Order saved locally, but database connection failed. Please contact the store.";
+      "Database Error: " + error.message;
 
     errorBox.style.display =
       "block";
