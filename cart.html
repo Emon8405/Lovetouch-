@@ -1,30 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Shopping Cart | Lovetouch</title>
 
-<meta name="description"
-content="Your Lovetouch shopping cart.">
+<link rel="stylesheet" href="style.css">
 
 <style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
-}
-
-body{
-  background:#f5f5f5;
-  color:#222;
-}
-
-/* HEADER */
 
 header{
   background:#131921;
@@ -32,43 +20,31 @@ header{
   padding:12px 5%;
   display:flex;
   align-items:center;
-  gap:25px;
+  gap:20px;
 }
 
 .logo{
   color:#ff9900;
   font-size:28px;
   font-weight:bold;
-  text-decoration:none;
 }
 
 .search{
   flex:1;
-  display:flex;
 }
 
 .search input{
   width:100%;
   padding:13px;
-  border:none;
-  outline:none;
-}
-
-.search button{
-  background:#ff9900;
-  border:none;
-  padding:0 20px;
-  cursor:pointer;
+  border:0;
+  outline:0;
 }
 
 .header-link{
   color:white;
-  text-decoration:none;
   font-weight:bold;
   white-space:nowrap;
 }
-
-/* NAV */
 
 nav{
   background:#232f3e;
@@ -77,24 +53,14 @@ nav{
 
 nav a{
   color:white;
-  text-decoration:none;
   margin-right:25px;
 }
 
-/* CONTAINER */
-
-.container{
+.cart-page{
   max-width:1200px;
   margin:30px auto;
-  padding:0 20px;
+  padding:20px;
 }
-
-.page-title{
-  margin-bottom:20px;
-  font-size:30px;
-}
-
-/* LAYOUT */
 
 .cart-layout{
   display:grid;
@@ -109,47 +75,37 @@ nav a{
   padding:25px;
 }
 
-/* CART ITEM */
-
 .cart-item{
   display:grid;
-  grid-template-columns:120px 1fr auto;
+  grid-template-columns:110px 1fr auto;
   gap:20px;
   padding:20px 0;
   border-bottom:1px solid #ddd;
   align-items:center;
 }
 
-.product-image{
-  width:120px;
-  height:120px;
+.cart-image{
+  width:110px;
+  height:110px;
   background:#eee;
   display:flex;
-  align-items:center;
   justify-content:center;
-  font-size:60px;
+  align-items:center;
   border-radius:8px;
+  font-size:60px;
 }
 
-.product-name{
-  font-size:20px;
+.cart-name{
+  font-size:19px;
   font-weight:bold;
   margin-bottom:8px;
 }
 
-.price{
-  font-size:20px;
+.cart-price{
+  font-size:18px;
   font-weight:bold;
   margin-bottom:10px;
 }
-
-.stock{
-  color:green;
-  font-size:14px;
-  margin-bottom:12px;
-}
-
-/* QUANTITY */
 
 .quantity{
   display:flex;
@@ -158,37 +114,31 @@ nav a{
 }
 
 .quantity button{
-  width:35px;
-  height:35px;
+  width:34px;
+  height:34px;
   border:1px solid #ccc;
   background:white;
   font-size:20px;
-  cursor:pointer;
 }
 
 .quantity span{
-  width:35px;
+  width:30px;
   text-align:center;
   font-weight:bold;
 }
 
 .remove{
-  color:#d62828;
-  border:none;
+  border:0;
   background:none;
-  cursor:pointer;
+  color:#d62828;
   margin-top:10px;
 }
 
-/* ITEM TOTAL */
-
 .item-total{
-  font-size:20px;
+  font-size:18px;
   font-weight:bold;
   white-space:nowrap;
 }
-
-/* SUMMARY */
 
 .summary h2{
   margin-bottom:20px;
@@ -207,23 +157,22 @@ nav a{
   font-weight:bold;
 }
 
-.checkout{
+.checkout-btn{
   width:100%;
   padding:14px;
+  border:0;
+  border-radius:6px;
   background:#ff9900;
-  border:none;
-  border-radius:5px;
   font-weight:bold;
   font-size:16px;
-  cursor:pointer;
   margin-top:20px;
 }
 
-.checkout:hover{
-  background:#f08800;
+.continue{
+  display:inline-block;
+  margin-top:20px;
+  color:#0066c0;
 }
-
-/* EMPTY */
 
 .empty{
   display:none;
@@ -242,22 +191,9 @@ nav a{
   padding:13px 25px;
   background:#ffd814;
   color:#222;
-  text-decoration:none;
   border-radius:5px;
   font-weight:bold;
 }
-
-/* FOOTER */
-
-footer{
-  background:#131921;
-  color:white;
-  text-align:center;
-  padding:35px;
-  margin-top:40px;
-}
-
-/* MOBILE */
 
 @media(max-width:800px){
 
@@ -275,12 +211,12 @@ footer{
   }
 
   .cart-item{
-    grid-template-columns:90px 1fr;
+    grid-template-columns:80px 1fr;
   }
 
-  .product-image{
-    width:90px;
-    height:90px;
+  .cart-image{
+    width:80px;
+    height:80px;
     font-size:45px;
   }
 
@@ -296,38 +232,33 @@ footer{
 
 <body>
 
-<!-- HEADER -->
-
 <header>
 
-<a href="index.html" class="logo">
+<a href="index.html"
+class="logo">
 Lovetouch
 </a>
 
 <div class="search">
 
 <input
-type="text"
+type="search"
 placeholder="Search products..."
 >
 
-<button>
-🔍
-</button>
-
 </div>
 
-<a href="login.html" class="header-link">
+<a href="login.html"
+class="header-link">
 👤 Account
 </a>
 
-<a href="cart.html" class="header-link">
+<a href="cart.html"
+class="header-link">
 🛒 Cart (<span id="cartCount">0</span>)
 </a>
 
 </header>
-
-<!-- NAV -->
 
 <nav>
 
@@ -343,21 +274,15 @@ Categories
 Products
 </a>
 
-<a href="#">
-Deals
-</a>
-
 </nav>
 
-<!-- MAIN -->
+<main class="cart-page">
 
-<main class="container">
-
-<h1 class="page-title">
+<h1>
 Shopping Cart
 </h1>
 
-<!-- CART -->
+<br>
 
 <div
 class="cart-layout"
@@ -371,14 +296,12 @@ id="cartLayout"
 
 <a
 href="index.html"
-class="shop-btn"
+class="continue"
 >
 ← Continue Shopping
 </a>
 
 </div>
-
-<!-- SUMMARY -->
 
 <div class="summary">
 
@@ -405,7 +328,7 @@ Delivery
 </span>
 
 <strong id="delivery">
-৳100
+৳0
 </strong>
 
 </div>
@@ -417,13 +340,13 @@ Total
 </span>
 
 <strong id="total">
-৳100
+৳0
 </strong>
 
 </div>
 
 <button
-class="checkout"
+class="checkout-btn"
 onclick="goCheckout()"
 >
 Proceed to Checkout
@@ -432,8 +355,6 @@ Proceed to Checkout
 </div>
 
 </div>
-
-<!-- EMPTY CART -->
 
 <div
 class="cart-box empty"
@@ -449,7 +370,7 @@ Your cart is empty
 </h2>
 
 <p>
-Looks like you haven't added anything yet.
+Add some products to your cart first.
 </p>
 
 <a
@@ -463,8 +384,6 @@ Start Shopping
 
 </main>
 
-<!-- FOOTER -->
-
 <footer>
 
 <h2>
@@ -477,318 +396,223 @@ Lovetouch
 
 </footer>
 
+<script src="products.js"></script>
+
+<script src="app.js"></script>
+
 <script>
-
-/* PRODUCTS */
-
-const products = [
-
-{
-id:"smartphone",
-name:"Smartphone Pro Max",
-price:25999,
-icon:"📱"
-},
-
-{
-id:"headphones",
-name:"Wireless Headphones",
-price:1499,
-icon:"🎧"
-},
-
-{
-id:"watch",
-name:"Smart Watch",
-price:2299,
-icon:"⌚"
-},
-
-{
-id:"shoes",
-name:"Premium Running Shoes",
-price:1899,
-icon:"👟"
-}
-
-];
-
-
-/* GET CART */
-
-function getCart(){
-
-return JSON.parse(
-localStorage.getItem("lovetouchCart")
-) || {};
-
-}
-
-
-/* SAVE CART */
-
-function saveCart(cart){
-
-localStorage.setItem(
-"lovetouchCart",
-JSON.stringify(cart)
-);
-
-}
-
-
-/* ADD DEFAULT CART FROM OLD SYSTEM */
-
-function migrateOldCart(){
-
-const oldCount =
-parseInt(
-localStorage.getItem("lovetouchCartCount")
-) || 0;
-
-const currentCart = getCart();
-
-if(
-oldCount > 0 &&
-Object.keys(currentCart).length === 0
-){
-
-currentCart.smartphone = oldCount;
-
-saveCart(currentCart);
-
-localStorage.removeItem(
-"lovetouchCartCount"
-);
-
-}
-
-}
-
-
-/* RENDER CART */
 
 function renderCart(){
 
-const cart = getCart();
+  const cart = getCart();
 
-const container =
-document.getElementById("cartItems");
+  const container =
+    document.getElementById(
+      "cartItems"
+    );
 
-container.innerHTML="";
+  container.innerHTML="";
 
-let subtotal=0;
+  let subtotal = 0;
 
-let itemCount=0;
+  let count = 0;
 
-Object.keys(cart).forEach(function(id){
+  Object.keys(cart).forEach(
+    function(productId){
 
-const quantity =
-cart[id];
+      const product =
+        products.find(
+          p => p.id === productId
+        );
 
-const product =
-products.find(
-p => p.id === id
-);
+      if(!product){
+        return;
+      }
 
-if(!product) return;
+      const quantity =
+        cart[productId];
 
-const itemSubtotal =
-product.price * quantity;
+      const itemTotal =
+        product.price * quantity;
 
-subtotal += itemSubtotal;
+      subtotal += itemTotal;
 
-itemCount += quantity;
+      count += quantity;
 
-const item =
-document.createElement("div");
+      const item =
+        document.createElement(
+          "div"
+        );
 
-item.className="cart-item";
+      item.className =
+        "cart-item";
 
-item.innerHTML=`
+      item.innerHTML = `
 
-<div class="product-image">
-${product.icon}
-</div>
+        <div class="cart-image">
+          ${product.icon}
+        </div>
 
-<div>
+        <div>
 
-<div class="product-name">
-${product.name}
-</div>
+          <div class="cart-name">
+            ${product.name}
+          </div>
 
-<div class="stock">
-✓ In Stock
-</div>
+          <div class="cart-price">
+            ৳${product.price.toLocaleString()}
+          </div>
 
-<div class="price">
-৳${product.price.toLocaleString()}
-</div>
+          <div class="quantity">
 
-<div class="quantity">
+            <button
+              onclick="changeQty('${productId}',-1)"
+            >
+              −
+            </button>
 
-<button onclick="changeQuantity('${id}',-1)">
-−
-</button>
+            <span>
+              ${quantity}
+            </span>
 
-<span>
-${quantity}
-</span>
+            <button
+              onclick="changeQty('${productId}',1)"
+            >
+              +
+            </button>
 
-<button onclick="changeQuantity('${id}',1)">
-+
-</button>
+          </div>
 
-</div>
+          <button
+            class="remove"
+            onclick="removeItem('${productId}')"
+          >
+            🗑️ Remove
+          </button>
 
-<button
-class="remove"
-onclick="removeProduct('${id}')"
->
-🗑️ Remove
-</button>
+        </div>
 
-</div>
+        <div class="item-total">
+          ৳${itemTotal.toLocaleString()}
+        </div>
 
-<div class="item-total">
+      `;
 
-৳${itemSubtotal.toLocaleString()}
+      container.appendChild(item);
 
-</div>
-
-`;
-
-container.appendChild(item);
-
-});
-
-
-/* UPDATE SUMMARY */
-
-document.getElementById(
-"subtotal"
-).textContent =
-"৳" + subtotal.toLocaleString();
-
-const delivery =
-subtotal > 0 ? 100 : 0;
-
-document.getElementById(
-"delivery"
-).textContent =
-"৳" + delivery.toLocaleString();
-
-document.getElementById(
-"total"
-).textContent =
-"৳" +
-(subtotal + delivery).toLocaleString();
-
-document.getElementById(
-"cartCount"
-).textContent =
-itemCount;
+    }
+  );
 
 
-/* EMPTY */
+  const delivery =
+    subtotal > 0 ? 100 : 0;
 
-if(itemCount === 0){
+  document.getElementById(
+    "subtotal"
+  ).textContent =
+    "৳" + subtotal.toLocaleString();
 
-document.getElementById(
-"cartLayout"
-).style.display="none";
+  document.getElementById(
+    "delivery"
+  ).textContent =
+    "৳" + delivery.toLocaleString();
 
-document.getElementById(
-"emptyCart"
-).style.display="block";
+  document.getElementById(
+    "total"
+  ).textContent =
+    "৳" +
+    (subtotal + delivery)
+    .toLocaleString();
 
-}else{
-
-document.getElementById(
-"cartLayout"
-).style.display="grid";
-
-document.getElementById(
-"emptyCart"
-).style.display="none";
-
-}
-
-}
+  document.getElementById(
+    "cartCount"
+  ).textContent =
+    count;
 
 
-/* CHANGE QUANTITY */
+  if(count === 0){
 
-function changeQuantity(id,change){
+    document.getElementById(
+      "cartLayout"
+    ).style.display="none";
 
-const cart =
-getCart();
+    document.getElementById(
+      "emptyCart"
+    ).style.display="block";
 
-cart[id] =
-(cart[id] || 0) + change;
+  }else{
 
-if(cart[id] <= 0){
+    document.getElementById(
+      "cartLayout"
+    ).style.display="grid";
 
-delete cart[id];
+    document.getElementById(
+      "emptyCart"
+    ).style.display="none";
 
-}
-
-saveCart(cart);
-
-renderCart();
+  }
 
 }
 
 
-/* REMOVE */
+function changeQty(
+  productId,
+  change
+){
 
-function removeProduct(id){
+  const cart = getCart();
 
-const cart =
-getCart();
+  const newQuantity =
+    (cart[productId] || 0)
+    + change;
 
-delete cart[id];
+  updateCartQuantity(
+    productId,
+    newQuantity
+  );
 
-saveCart(cart);
-
-renderCart();
+  renderCart();
 
 }
 
 
-/* CHECKOUT */
+function removeItem(productId){
+
+  removeProductFromCart(
+    productId
+  );
+
+  renderCart();
+
+}
+
 
 function goCheckout(){
 
-const cart =
-getCart();
+  const cart = getCart();
 
-if(
-Object.keys(cart).length === 0
-){
+  if(
+    Object.keys(cart).length === 0
+  ){
 
-alert(
-"Your cart is empty."
-);
+    alert(
+      "Your cart is empty."
+    );
 
-return;
+    return;
+
+  }
+
+  window.location.href =
+    "checkout.html";
 
 }
 
-window.location.href =
-"checkout.html";
-
-}
-
-
-/* START */
-
-migrateOldCart();
 
 renderCart();
 
 </script>
 
 </body>
-</html>                              
-     
+
+</html>
