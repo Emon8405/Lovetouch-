@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lovetouch Admin Panel</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f5f5f5;
+  color:#222;
+}
+
+/* HEADER */
+
+header{
+  background:#131921;
+  color:white;
+  padding:15px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  color:#ff9900;
+  font-size:28px;
+  font-weight:bold;
+}
+
+.logout{
+  background:#ff9900;
+  border:none;
+  padding:10px 18px;
+  border-radius:5px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* LAYOUT */
+
+.layout{
+  display:flex;
+  min-height:calc(100vh - 60px);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:230px;
+  background:#232f3e;
+  color:white;
+  padding:25px 15px;
+}
+
+.sidebar h3{
+  margin-bottom:20px;
+}
+
+.sidebar button{
+  width:100%;
+  padding:13px;
+  margin-bottom:8px;
+  border:none;
+  background:transparent;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+.sidebar button:hover{
+  background:#37475a;
+}
+
+/* MAIN */
+
+.main{
+  flex:1;
+  padding:30px;
+}
+
+.section{
+  background:white;
+  padding:25px;
+  border-radius:8px;
+  margin-bottom:25px;
+}
+
+.section h2{
+  margin-bottom:20px;
+}
+
+/* DASHBOARD */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.stat{
+  background:#f5f5f5;
+  padding:20px;
+  border-radius:8px;
+}
+
+.stat h3{
+  color:#666;
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.stat p{
+  font-size:28px;
+  font-weight:bold;
+}
+
+/* FORM */
+
+.form-group{
+  margin-bottom:15px;
+}
+
+.form-group label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:11px;
+  border:1px solid #ccc;
+  border-radius:5px;
+}
+
+.form-group textarea{
+  min-height:80px;
+}
+
+.add-btn{
+  background:#ff9900;
+  border:none;
+  padding:12px 22px;
+  border-radius:5px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* TABLE */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,
+td{
+  border-bottom:1px solid #ddd;
+  padding:12px;
+  text-align:left;
+}
+
+th{
+  background:#f5f5f5;
+}
+
+.delete-btn{
+  background:#d62828;
+  color:white;
+  border:none;
+  padding:7px 12px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+/* HIDDEN */
+
+#productSection{
+  display:none;
+}
+
+#ordersSection{
+  display:none;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .layout{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    width:100%;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  table{
+    font-size:13px;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">
+    Lovetouch Admin
+  </div>
+
+  <button class="logout" onclick="logout()">
+    Logout
+  </button>
+
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+  <h3>Admin Menu</h3>
+
+  <button onclick="showDashboard()">
+    📊 Dashboard
+  </button>
+
+  <button onclick="showProducts()">
+    📦 Products
+  </button>
+
+  <button onclick="showOrders()">
+    🛒 Orders
+  </button>
+
+  <button onclick="window.location.href='index.html'">
+    🏠 View Website
+  </button>
+
+</aside>
+
+<!-- MAIN -->
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section class="section" id="dashboardSection">
+
+  <h2>Dashboard</h2>
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <h3>Total Products</h3>
+
+      <p id="productCount">
+        4
+      </p>
+
+    </div>
+
+    <div class="stat">
+
+      <h3>Total Orders</h3>
+
+      <p>
+        0
+      </p>
+
+    </div>
+
+    <div class="stat">
+
+      <h3>Total Customers</h3>
+
+      <p>
+        0
+      </p>
+
+    </div>
+
+    <div class="stat">
+
+      <h3>Total Sales</h3>
+
+      <p>
+        ৳0
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- PRODUCTS -->
+
+<section class="section" id="productSection">
+
+  <h2>Add New Product</h2>
+
+  <div class="form-group">
+
+    <label>
+      Product Name
+    </label>
+
+    <input
+      type="text"
+      id="productName"
+      placeholder="Enter product name"
+    >
+
+  </div>
+
+  <div class="form-group">
+
+    <label>
+      Price
+    </label>
+
+    <input
+      type="number"
+      id="productPrice"
+      placeholder="Enter price"
+    >
+
+  </div>
+
+  <div class="form-group">
+
+    <label>
+      Category
+    </label>
+
+    <select id="productCategory">
+
+      <option>
+        Electronics
+      </option>
+
+      <option>
+        Fashion
+      </option>
+
+      <option>
+        Beauty
+      </option>
+
+      <option>
+        Home
+      </option>
+
+      <option>
+        Gaming
+      </option>
+
+    </select>
+
+  </div>
+
+  <div class="form-group">
+
+    <label>
+      Stock
+    </label>
+
+    <input
+      type="number"
+      id="productStock"
+      placeholder="Stock quantity"
+    >
+
+  </div>
+
+  <div class="form-group">
+
+    <label>
+      Description
+    </label>
+
+    <textarea
+      id="productDescription"
+      placeholder="Product description"
+    ></textarea>
+
+  </div>
+
+  <button
+    class="add-btn"
+    onclick="addProduct()"
+  >
+    ➕ Add Product
+  </button>
+
+</section>
+
+<!-- PRODUCT LIST -->
+
+<section class="section" id="productListSection">
+
+  <h2>Product List</h2>
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>
+          Product
+        </th>
+
+        <th>
+          Price
+        </th>
+
+        <th>
+          Category
+        </th>
+
+        <th>
+          Stock
+        </th>
+
+        <th>
+          Action
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody id="productTable">
+
+      <tr>
+
+        <td>
+          Smartphone Pro Max
+        </td>
+
+        <td>
+          ৳25,999
+        </td>
+
+        <td>
+          Electronics
+        </td>
+
+        <td>
+          20
+        </td>
+
+        <td>
+          <button
+            class="delete-btn"
+            onclick="deleteProduct(this)"
+          >
+            Delete
+          </button>
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+          Wireless Headphones
+        </td>
+
+        <td>
+          ৳1,499
+        </td>
+
+        <td>
+          Electronics
+        </td>
+
+        <td>
+          35
+        </td>
+
+        <td>
+          <button
+            class="delete-btn"
+            onclick="deleteProduct(this)"
+          >
+            Delete
+          </button>
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</section>
+
+<!-- ORDERS -->
+
+<section class="section" id="ordersSection">
+
+  <h2>Orders</h2>
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>
+          Order ID
+        </th>
+
+        <th>
+          Customer
+        </th>
+
+        <th>
+          Product
+        </th>
+
+        <th>
+          Total
+        </th>
+
+        <th>
+          Status
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr>
+
+        <td>
+          LT100001
+        </td>
+
+        <td>
+          Demo Customer
+        </td>
+
+        <td>
+          Smartphone Pro Max
+        </td>
+
+        <td>
+          ৳26,099
+        </td>
+
+        <td>
+          Pending
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</section>
+
+</main>
+
+</div>
+
+<script>
+
+/* SHOW DASHBOARD */
+
+function showDashboard(){
+
+  document.getElementById("dashboardSection").style.display="block";
+
+  document.getElementById("productSection").style.display="none";
+
+  document.getElementById("productListSection").style.display="none";
+
+  document.getElementById("ordersSection").style.display="none";
+
+}
+
+
+/* SHOW PRODUCTS */
+
+function showProducts(){
+
+  document.getElementById("dashboardSection").style.display="none";
+
+  document.getElementById("productSection").style.display="block";
+
+  document.getElementById("productListSection").style.display="block";
+
+  document.getElementById("ordersSection").style.display="none";
+
+}
+
+
+/* SHOW ORDERS */
+
+function showOrders(){
+
+  document.getElementById("dashboardSection").style.display="none";
+
+  document.getElementById("productSection").style.display="none";
+
+  document.getElementById("productListSection").style.display="none";
+
+  document.getElementById("ordersSection").style.display="block";
+
+}
+
+
+/* ADD PRODUCT */
+
+function addProduct(){
+
+  const name =
+    document.getElementById("productName").value.trim();
+
+  const price =
+    document.getElementById("productPrice").value;
+
+  const category =
+    document.getElementById("productCategory").value;
+
+  const stock =
+    document.getElementById("productStock").value;
+
+  if(!name || !price || !stock){
+
+    alert("Please fill in product name, price and stock.");
+
+    return;
+
+  }
+
+  const table =
+    document.getElementById("productTable");
+
+  const row =
+    table.insertRow();
+
+  row.innerHTML = `
+
+    <td>${name}</td>
+
+    <td>৳${Number(price).toLocaleString()}</td>
+
+    <td>${category}</td>
+
+    <td>${stock}</td>
+
+    <td>
+
+      <button
+        class="delete-btn"
+        onclick="deleteProduct(this)"
+      >
+        Delete
+      </button>
+
+    </td>
+
+  `;
+
+  document.getElementById("productName").value="";
+  document.getElementById("productPrice").value="";
+  document.getElementById("productStock").value="";
+  document.getElementById("productDescription").value="";
+
+  alert("Product added successfully!");
+
+}
+
+
+/* DELETE PRODUCT */
+
+function deleteProduct(button){
+
+  if(confirm("Are you sure you want to delete this product?")){
+
+    button.closest("tr").remove();
+
+  }
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+  alert("Admin logout.");
+
+}
+
+</script>
+
+</body>
+</html>
