@@ -1,406 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Product Details | Lovetouch</title>
-  <meta name="description" content="View product details and shop on Lovetouch.">
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body {
-      background: #f5f5f5;
-      color: #222;
-    }
+<title>Product Details | Lovetouch</title>
 
-    header {
-      background: #131921;
-      color: white;
-      padding: 12px 5%;
-      display: flex;
-      align-items: center;
-      gap: 25px;
-    }
+<link rel="stylesheet" href="style.css">
 
-    .logo {
-      color: #ff9900;
-      font-size: 28px;
-      font-weight: bold;
-      text-decoration: none;
-    }
+<style>
 
-    .search {
-      flex: 1;
-      display: flex;
-    }
+header{
+  background:#131921;
+  padding:12px 5%;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
 
-    .search input {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-    }
+.logo{
+  color:#ff9900;
+  font-size:28px;
+  font-weight:bold;
+}
 
-    .search button {
-      background: #ff9900;
-      border: none;
-      padding: 0 20px;
-      cursor: pointer;
-      font-size: 18px;
-    }
+.search{
+  flex:1;
+}
 
-    .cart {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      white-space: nowrap;
-    }
+.search input{
+  width:100%;
+  padding:13px;
+  border:0;
+}
 
-    nav {
-      background: #232f3e;
-      padding: 12px 5%;
-    }
+.header-link{
+  color:white;
+  font-weight:bold;
+  white-space:nowrap;
+}
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-right: 25px;
-    }
+nav{
+  background:#232f3e;
+  padding:12px 5%;
+}
 
-    .container {
-      max-width: 1200px;
-      margin: 35px auto;
-      padding: 0 20px;
-    }
+nav a{
+  color:white;
+  margin-right:25px;
+}
 
-    .breadcrumb {
-      margin-bottom: 20px;
-      color: #666;
-    }
+.product-page{
+  max-width:1100px;
+  margin:35px auto;
+  padding:20px;
+}
 
-    .product-box {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      display: grid;
-      grid-template-columns: 45% 55%;
-      gap: 40px;
-    }
+.product-box{
+  background:white;
+  border-radius:10px;
+  padding:30px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+}
 
-    .product-image {
-      height: 450px;
-      background: #f1f1f1;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 150px;
-    }
+.product-photo{
+  min-height:420px;
+  background:#eee;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:150px;
+}
 
-    .product-info h1 {
-      font-size: 32px;
-      margin-bottom: 15px;
-    }
+.product-title{
+  font-size:35px;
+  margin-bottom:12px;
+}
 
-    .rating {
-      color: #f5a623;
-      font-size: 18px;
-      margin-bottom: 15px;
-    }
+.product-rating{
+  color:#f5a623;
+  margin-bottom:15px;
+}
 
-    .price {
-      font-size: 32px;
-      font-weight: bold;
-      margin: 15px 0;
-    }
+.product-price{
+  font-size:32px;
+  font-weight:bold;
+  margin:15px 0;
+}
 
-    .old-price {
-      color: #777;
-      text-decoration: line-through;
-      font-size: 18px;
-      margin-left: 10px;
-    }
+.product-old-price{
+  color:#777;
+  text-decoration:line-through;
+  font-size:17px;
+  margin-left:10px;
+}
 
-    .discount {
-      color: #d62828;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
+.stock{
+  color:green;
+  margin:15px 0;
+}
 
-    .description {
-      line-height: 1.7;
-      color: #555;
-      margin-bottom: 25px;
-    }
+.description{
+  line-height:1.7;
+  color:#555;
+  margin:20px 0;
+}
 
-    .stock {
-      color: green;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
+.quantity{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:20px 0;
+}
 
-    .quantity {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+.quantity button{
+  width:40px;
+  height:40px;
+  border:1px solid #ccc;
+  background:white;
+  font-size:22px;
+}
 
-    .quantity button {
-      width: 38px;
-      height: 38px;
-      border: 1px solid #ccc;
-      background: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
+.quantity span{
+  width:40px;
+  text-align:center;
+  font-weight:bold;
+}
 
-    .quantity span {
-      width: 40px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
+.action-btn{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:6px;
+  font-weight:bold;
+  font-size:16px;
+  margin-top:10px;
+}
 
-    .buttons {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+.add-cart{
+  background:#ffd814;
+}
 
-    .btn {
-      padding: 14px 25px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.buy-now{
+  background:#ff9900;
+}
 
-    .add-cart {
-      background: #ffd814;
-    }
+.back{
+  display:inline-block;
+  margin-top:20px;
+  color:#0066c0;
+}
 
-    .buy-now {
-      background: #ff9900;
-    }
+@media(max-width:800px){
 
-    .back {
-      background: #232f3e;
-      color: white;
-    }
+  header{
+    flex-wrap:wrap;
+  }
 
-    .message {
-      margin-top: 15px;
-      font-weight: bold;
-      color: green;
-      display: none;
-    }
+  .search{
+    order:3;
+    flex-basis:100%;
+  }
 
-    footer {
-      background: #131921;
-      color: white;
-      text-align: center;
-      padding: 35px;
-      margin-top: 40px;
-    }
+  .product-box{
+    grid-template-columns:1fr;
+  }
 
-    @media (max-width: 800px) {
-      header {
-        flex-wrap: wrap;
-      }
+  .product-photo{
+    min-height:300px;
+    font-size:100px;
+  }
 
-      .search {
-        order: 3;
-        flex-basis: 100%;
-      }
+}
 
-      .product-box {
-        grid-template-columns: 1fr;
-      }
+</style>
 
-      .product-image {
-        height: 300px;
-      }
-
-      .product-info h1 {
-        font-size: 26px;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
 <header>
 
-  <a href="index.html" class="logo">Lovetouch</a>
+<a href="index.html" class="logo">
+Lovetouch
+</a>
 
-  <div class="search">
-    <input type="text" placeholder="Search products...">
-    <button>🔍</button>
-  </div>
+<div class="search">
 
-  <a href="cart.html" class="cart">
-    🛒 Cart (<span id="cartCount">0</span>)
-  </a>
+<input
+type="search"
+placeholder="Search products..."
+>
+
+</div>
+
+<a href="login.html"
+class="header-link">
+👤 Account
+</a>
+
+<a href="cart.html"
+class="header-link">
+🛒 Cart
+</a>
 
 </header>
 
 <nav>
-  <a href="index.html">Home</a>
-  <a href="index.html#categories">Categories</a>
-  <a href="index.html#products">Products</a>
-  <a href="#">Deals</a>
+
+<a href="index.html">
+Home
+</a>
+
+<a href="index.html#categories">
+Categories
+</a>
+
+<a href="index.html#products">
+Products
+</a>
+
 </nav>
 
-<main class="container">
+<main class="product-page">
 
-  <div class="breadcrumb">
-    Home / Electronics / Smartphone
-  </div>
+<div class="product-box">
 
-  <div class="product-box">
+<div
+class="product-photo"
+id="productImage"
+>
+🛍️
+</div>
 
-    <div class="product-image">
-      📱
-    </div>
+<div>
 
-    <div class="product-info">
+<div
+id="productCategory"
+>
+Product
+</div>
 
-      <h1>Smartphone Pro Max</h1>
+<h1
+class="product-title"
+id="productName"
+>
+Loading...
+</h1>
 
-      <div class="rating">
-        ⭐⭐⭐⭐⭐
-        <span style="color:#555;"> 4.8 (125 Reviews)</span>
-      </div>
+<div
+class="product-rating"
+id="productRating"
+>
+</div>
 
-      <div class="price">
-        ৳25,999
-        <span class="old-price">৳29,999</span>
-      </div>
+<div
+class="product-price"
+id="productPrice"
+>
+</div>
 
-      <div class="discount">
-        Save ৳4,000 — Limited Time Deal
-      </div>
+<div
+id="productStock"
+class="stock"
+>
+</div>
 
-      <p class="description">
-        Experience powerful performance, a stunning display,
-        excellent camera quality and long-lasting battery life.
-        Perfect for everyday use, entertainment and work.
-      </p>
+<p
+id="productDescription"
+class="description"
+>
+</p>
 
-      <div class="stock">
-        ✓ In Stock
-      </div>
+<div class="quantity">
 
-      <div class="quantity">
+<button
+onclick="changeQuantity(-1)"
+>
+−
+</button>
 
-        <strong>Quantity:</strong>
+<span id="quantity">
+1
+</span>
 
-        <button onclick="decreaseQuantity()">−</button>
+<button
+onclick="changeQuantity(1)"
+>
++
+</button>
 
-        <span id="quantity">1</span>
+</div>
 
-        <button onclick="increaseQuantity()">+</button>
+<button
+class="action-btn add-cart"
+onclick="addCurrentProduct()"
+>
+🛒 Add to Cart
+</button>
 
-      </div>
+<button
+class="action-btn buy-now"
+onclick="buyNow()"
+>
+⚡ Buy Now
+</button>
 
-      <div class="buttons">
+<a
+href="index.html"
+class="back"
+>
+← Continue Shopping
+</a>
 
-        <button class="btn add-cart" onclick="addToCart()">
-          🛒 Add to Cart
-        </button>
+</div>
 
-        <button class="btn buy-now" onclick="buyNow()">
-          ⚡ Buy Now
-        </button>
-
-        <a href="index.html" class="btn back">
-          ← Continue Shopping
-        </a>
-
-      </div>
-
-      <div class="message" id="message">
-        ✓ Product added to cart!
-      </div>
-
-    </div>
-
-  </div>
+</div>
 
 </main>
 
 <footer>
 
-  <h2>Lovetouch</h2>
+<h2>
+Lovetouch
+</h2>
 
-  <p>© 2026 Lovetouch. All Rights Reserved.</p>
+<p>
+© 2026 Lovetouch. All Rights Reserved.
+</p>
 
 </footer>
 
+<script src="products.js"></script>
+
+<script src="app.js"></script>
+
 <script>
 
-  let quantity = 1;
-  let cartCount = 0;
+let quantity = 1;
 
-  function increaseQuantity() {
+const params =
+new URLSearchParams(
+window.location.search
+);
 
-    quantity++;
+const productId =
+params.get("id");
 
-    document.getElementById("quantity").textContent = quantity;
+const product =
+products.find(function(item){
 
-  }
+  return item.id === productId;
 
-  function decreaseQuantity() {
+});
 
-    if (quantity > 1) {
 
-      quantity--;
+function showProduct(){
 
-      document.getElementById("quantity").textContent = quantity;
+  if(!product){
 
-    }
+    document.getElementById(
+      "productName"
+    ).textContent =
+      "Product Not Found";
 
-  }
-
-  function addToCart() {
-
-    cartCount += quantity;
-
-    document.getElementById("cartCount").textContent = cartCount;
-
-    const message =
-      document.getElementById("message");
-
-    message.style.display = "block";
-
-    setTimeout(function() {
-
-      message.style.display = "none";
-
-    }, 2000);
+    return;
 
   }
 
-  function buyNow() {
+  document.getElementById(
+    "productImage"
+  ).textContent =
+    product.icon;
 
-    alert(
-      "Buy Now selected. Checkout will be added in the next step."
-    );
+  document.getElementById(
+    "productCategory"
+  ).textContent =
+    product.category;
+
+  document.getElementById(
+    "productName"
+  ).textContent =
+    product.name;
+
+  document.getElementById(
+    "productRating"
+  ).textContent =
+    "⭐".repeat(product.rating);
+
+  document.getElementById(
+    "productPrice"
+  ).innerHTML =
+    `৳${product.price.toLocaleString()}
+     <span class="product-old-price">
+     ৳${product.oldPrice.toLocaleString()}
+     </span>`;
+
+  document.getElementById(
+    "productStock"
+  ).textContent =
+    product.stock > 0
+      ? "✓ In Stock"
+      : "Out of Stock";
+
+  document.getElementById(
+    "productDescription"
+  ).textContent =
+    product.description;
+
+}
+
+
+function changeQuantity(change){
+
+  quantity += change;
+
+  if(quantity < 1){
+    quantity = 1;
+  }
+
+  if(product &&
+     quantity > product.stock){
+
+    quantity = product.stock;
 
   }
+
+  document.getElementById(
+    "quantity"
+  ).textContent =
+    quantity;
+
+}
+
+
+function addCurrentProduct(){
+
+  if(!product){
+    return;
+  }
+
+  if(product.stock <= 0){
+
+    alert("Product is out of stock.");
+
+    return;
+
+  }
+
+  addProductToCart(
+    product.id,
+    quantity
+  );
+
+  alert(
+    product.name +
+    " added to cart!"
+  );
+
+}
+
+
+function buyNow(){
+
+  if(!product){
+    return;
+  }
+
+  addProductToCart(
+    product.id,
+    quantity
+  );
+
+  window.location.href =
+    "cart.html";
+
+}
+
+
+showProduct();
 
 </script>
 
 </body>
+
   </html>
