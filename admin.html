@@ -377,11 +377,13 @@ async function renderDashboard(){
 
 
   const customers =
-    new Set(
-      orders.map(
-        order => order.phone
+  new Set(
+    orders
+      .map(order =>
+        (order.phone || "").trim()
       )
-    );
+      .filter(phone => phone !== "")
+  );
 
 
   document.getElementById(
