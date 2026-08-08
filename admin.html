@@ -144,6 +144,20 @@ body{
   color:#777;
 }
 
+.loading{
+  text-align:center;
+  padding:40px;
+  color:#777;
+}
+
+.error{
+  background:#ffe5e5;
+  color:#b00020;
+  padding:15px;
+  border-radius:6px;
+  margin-bottom:20px;
+}
+
 @media(max-width:700px){
 
   .stats{
@@ -251,7 +265,14 @@ Clear All Orders
 
 </div>
 
+<div id="message"></div>
+
 <div id="ordersList">
+
+<div class="loading">
+Loading orders...
+</div>
+
 </div>
 
 </div>
@@ -260,30 +281,87 @@ Clear All Orders
 
 <script src="products.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 
-function getOrders(){
+/* SUPABASE */
 
-  return JSON.parse(
-    localStorage.getItem(
-      "lovetouchOrders"
-    )
-  ) || [];
+const SUPABASE_URL =
+  "https://yaukdrdygrlpdrhzpbvv.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_So5A7k5nsnnKyvC-MkiTMw_t6Q9poOO";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* LOAD ORDERS */
+
+async function getOrders(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+  if(error){
+
+    console.error(
+      "Supabase error:",
+      error
+    );
+
+    showError(
+      "Could not load orders: " +
+      error.message
+    );
+
+    return [];
+
+  }
+
+  return data || [];
 
 }
 
 
-function renderDashboard(){
+/* ERROR */
+
+function showError(message){
+
+  document.getElementById(
+    "message"
+  ).innerHTML = `
+
+    <div class="error">
+      ${message}
+    </div>
+
+  `;
+
+}
+
+
+/* RENDER DASHBOARD */
+
+async function renderDashboard(){
 
   const orders =
-    getOrders();
-
-  const users =
-    JSON.parse(
-      localStorage.getItem(
-        "lovetouchUsers"
-      )
-    ) || [];
+    await getOrders();
 
 
   document.getElementById(
@@ -298,10 +376,18 @@ function renderDashboard(){
     products.length;
 
 
+  const customers =
+    new Set(
+      orders.map(
+        order => order.phone
+      )
+    );
+
+
   document.getElementById(
     "totalCustomers"
   ).textContent =
-    users.length;
+    customers.size;
 
 
   const container =
@@ -336,216 +422,223 @@ function renderDashboard(){
   }
 
 
-  orders
-    .slice()
-    .reverse()
-    .forEach(
-      function(order){
+  orders.forEach(
+    function(order){
 
-        const card =
-          document.createElement(
-            "div"
-          );
-
-        card.className =
-          "order-card";
+      const card =
+        document.createElement(
+          "div"
+        );
 
 
-        let productsHTML="";
-
-        let orderTotal=0;
-
-
-        Object.keys(order.items)
-          .forEach(
-            function(productId){
-
-              const product =
-                products.find(
-                  p =>
-                    p.id === productId
-                );
+      card.className =
+        "order-card";
 
 
-              if(!product){
-                return;
-              }
+      let productsHTML="";
 
 
-              const quantity =
-                order.items[
-                  productId
-                ];
+      let items =
+        order.items || {};
 
 
-              const itemTotal =
-                product.price *
-                quantity;
+      Object.keys(items)
+        .forEach(
+          function(productId){
+
+            const product =
+              products.find(
+                p =>
+                  p.id === productId
+              );
 
 
-              orderTotal +=
-                itemTotal;
-
-
-              productsHTML += `
-
-                <div
-                  class="order-product"
-                >
-
-                  <span>
-                    ${product.name}
-                    × ${quantity}
-                  </span>
-
-                  <strong>
-                    ৳${itemTotal.toLocaleString()}
-                  </strong>
-
-                </div>
-
-              `;
-
+            if(!product){
+              return;
             }
-          );
 
 
-        const delivery =
-          orderTotal > 0
-            ? 100
-            : 0;
+            const quantity =
+              Number(
+                items[productId]
+              ) || 0;
 
 
-        const grandTotal =
-          orderTotal +
-          delivery;
+            const itemTotal =
+              product.price *
+              quantity;
 
 
-        const date =
-          order.date
-            ? new Date(
-                order.date
-              ).toLocaleString()
-            : "";
+            productsHTML += `
 
+              <div
+                class="order-product"
+              >
 
-        card.innerHTML = `
+                <span>
 
-          <div class="order-top">
+                  ${product.name}
+                  × ${quantity}
 
-            <div>
+                </span>
 
-              <div class="order-id">
-                Order ID:
-                ${order.id}
+                <strong>
+
+                  ৳${itemTotal.toLocaleString()}
+
+                </strong>
+
               </div>
 
-              <small>
-                ${date}
-              </small>
+            `;
+
+          }
+        );
+
+
+      const date =
+        order.created_at
+          ? new Date(
+              order.created_at
+            ).toLocaleString()
+          : "";
+
+
+      card.innerHTML = `
+
+        <div class="order-top">
+
+          <div>
+
+            <div class="order-id">
+
+              Order ID:
+              ${order.order_id}
 
             </div>
 
-            <div class="order-status">
-              New Order
-            </div>
+            <small>
+              ${date}
+            </small>
 
           </div>
 
+          <div class="order-status">
 
-          <div class="customer">
-
-            <strong>
-              Customer
-            </strong>
-
-            <p>
-              Name:
-              ${order.customer.name}
-            </p>
-
-            <p>
-              Phone:
-              ${order.customer.phone}
-            </p>
-
-            <p>
-              District:
-              ${order.customer.district}
-            </p>
-
-            <p>
-              Address:
-              ${order.customer.address}
-            </p>
-
-            <p>
-              Payment:
-              ${order.payment}
-            </p>
+            ${order.status || "New"}
 
           </div>
 
-
-          <h3>
-            Products
-          </h3>
-
-          ${productsHTML}
+        </div>
 
 
-          <div class="order-total">
+        <div class="customer">
 
-            Total:
-            ৳${grandTotal.toLocaleString()}
+          <strong>
+            Customer
+          </strong>
 
-          </div>
+          <p>
+            Name:
+            ${order.customer_name}
+          </p>
+
+          <p>
+            Phone:
+            ${order.phone}
+          </p>
+
+          <p>
+            District:
+            ${order.district}
+          </p>
+
+          <p>
+            Address:
+            ${order.address}
+          </p>
+
+          <p>
+            Payment:
+            ${order.payment_method}
+          </p>
+
+        </div>
 
 
-          <button
-            class="delete-btn"
-            onclick="deleteOrder('${order.id}')"
-          >
-            Delete Order
-          </button>
+        <h3>
+          Products
+        </h3>
 
-        `;
+        ${productsHTML}
 
 
-        container.appendChild(card);
+        <div class="order-total">
 
-      }
-    );
+          Total:
+          ৳${Number(
+            order.total || 0
+          ).toLocaleString()}
+
+        </div>
+
+
+        <button
+          class="delete-btn"
+          onclick="deleteOrder(${order.id})"
+        >
+
+          Delete Order
+
+        </button>
+
+      `;
+
+
+      container.appendChild(
+        card
+      );
+
+    }
+  );
 
 }
 
 
-function deleteOrder(orderId){
+/* DELETE ONE ORDER */
+
+async function deleteOrder(id){
 
   if(
     !confirm(
       "Delete this order?"
     )
   ){
+
     return;
+
   }
 
 
-  let orders =
-    getOrders();
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .delete()
+      .eq("id", id);
 
 
-  orders =
-    orders.filter(
-      order =>
-        order.id !== orderId
+  if(error){
+
+    alert(
+      "Delete failed: " +
+      error.message
     );
 
+    return;
 
-  localStorage.setItem(
-    "lovetouchOrders",
-    JSON.stringify(orders)
-  );
+  }
 
 
   renderDashboard();
@@ -553,13 +646,17 @@ function deleteOrder(orderId){
 }
 
 
-function clearOrders(){
+/* CLEAR ALL */
+
+async function clearOrders(){
 
   const orders =
-    getOrders();
+    await getOrders();
 
 
-  if(orders.length === 0){
+  if(
+    orders.length === 0
+  ){
 
     alert(
       "There are no orders."
@@ -575,13 +672,34 @@ function clearOrders(){
       "Are you sure you want to delete all orders?"
     )
   ){
+
     return;
+
   }
 
 
-  localStorage.removeItem(
-    "lovetouchOrders"
-  );
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .delete()
+      .neq(
+        "id",
+        0
+      );
+
+
+  if(error){
+
+    alert(
+      "Could not clear orders: " +
+      error.message
+    );
+
+    return;
+
+  }
 
 
   renderDashboard();
@@ -589,10 +707,12 @@ function clearOrders(){
 }
 
 
+/* START */
+
 renderDashboard();
 
 </script>
 
 </body>
 
-</html>
+  </html>
