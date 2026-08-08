@@ -1,521 +1,743 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Checkout | Lovetouch</title>
-  <meta name="description" content="Complete your Lovetouch order.">
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body {
-      background: #f5f5f5;
-      color: #222;
-    }
+<title>Checkout | Lovetouch</title>
 
-    header {
-      background: #131921;
-      color: white;
-      padding: 15px 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+<link rel="stylesheet" href="style.css">
 
-    .logo {
-      color: #ff9900;
-      font-size: 28px;
-      font-weight: bold;
-      text-decoration: none;
-    }
+<style>
 
-    .secure {
-      color: #ddd;
-      font-size: 14px;
-    }
+header{
+  background:#131921;
+  color:white;
+  padding:12px 5%;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
+.logo{
+  color:#ff9900;
+  font-size:28px;
+  font-weight:bold;
+}
 
-    h1 {
-      margin-bottom: 25px;
-    }
+.header-link{
+  color:white;
+  font-weight:bold;
+  white-space:nowrap;
+}
 
-    .checkout-grid {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 25px;
-    }
+.search{
+  flex:1;
+}
 
-    .box {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
+.search input{
+  width:100%;
+  padding:13px;
+  border:0;
+}
 
-    .box h2 {
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
+nav{
+  background:#232f3e;
+  padding:12px 5%;
+}
 
-    .form-group {
-      margin-bottom: 16px;
-    }
+nav a{
+  color:white;
+  margin-right:25px;
+}
 
-    .form-group label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: bold;
-    }
+.checkout-page{
+  max-width:1100px;
+  margin:30px auto;
+  padding:20px;
+}
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #bbb;
-      border-radius: 5px;
-      font-size: 15px;
-      outline: none;
-    }
+.checkout-layout{
+  display:grid;
+  grid-template-columns:1fr 350px;
+  gap:25px;
+}
 
-    .form-group textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
+.box{
+  background:white;
+  padding:25px;
+  border-radius:8px;
+}
 
-    .payment-option {
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
+.box h2{
+  margin-bottom:20px;
+}
 
-    .payment-option input {
-      margin-right: 8px;
-    }
+.form-group{
+  margin-bottom:16px;
+}
 
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 15px 0;
-    }
+.form-group label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+}
 
-    .total {
-      border-top: 1px solid #ddd;
-      padding-top: 18px;
-      font-size: 22px;
-      font-weight: bold;
-    }
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:5px;
+  outline:none;
+}
 
-    .place-order {
-      width: 100%;
-      padding: 15px;
-      background: #ff9900;
-      border: none;
-      border-radius: 5px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 15px;
-    }
+.form-group textarea{
+  min-height:100px;
+  resize:vertical;
+}
 
-    .place-order:hover {
-      background: #f08800;
-    }
+.payment{
+  margin-top:25px;
+}
 
-    .secure-note {
-      margin-top: 15px;
-      color: #666;
-      font-size: 13px;
-      line-height: 1.5;
-    }
+.payment-option{
+  border:1px solid #ddd;
+  padding:15px;
+  margin:10px 0;
+  border-radius:6px;
+}
 
-    .success {
-      display: none;
-      background: #e8f5e9;
-      border: 1px solid #81c784;
-      color: #2e7d32;
-      padding: 25px;
-      border-radius: 8px;
-      text-align: center;
-    }
+.payment-option label{
+  margin-left:8px;
+}
 
-    .success h2 {
-      margin-bottom: 10px;
-    }
+.order-item{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
+}
 
-    .home-btn {
-      display: inline-block;
-      margin-top: 20px;
-      background: #232f3e;
-      color: white;
-      padding: 12px 22px;
-      text-decoration: none;
-      border-radius: 5px;
-    }
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  margin:15px 0;
+}
 
-    footer {
-      background: #131921;
-      color: white;
-      text-align: center;
-      padding: 30px;
-      margin-top: 40px;
-    }
+.total{
+  border-top:1px solid #ddd;
+  padding-top:18px;
+  font-size:22px;
+  font-weight:bold;
+}
 
-    @media (max-width: 800px) {
-      .checkout-grid {
-        grid-template-columns: 1fr;
-      }
+.place-order{
+  width:100%;
+  border:0;
+  background:#ff9900;
+  padding:15px;
+  border-radius:6px;
+  font-weight:bold;
+  font-size:16px;
+  margin-top:20px;
+}
 
-      header {
-        gap: 10px;
-      }
+.empty{
+  text-align:center;
+  background:white;
+  padding:60px 20px;
+  border-radius:8px;
+}
 
-      .secure {
-        display: none;
-      }
-    }
-  </style>
+.shop-btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:13px 25px;
+  background:#ffd814;
+  color:#222;
+  border-radius:5px;
+  font-weight:bold;
+}
+
+.success{
+  display:none;
+  text-align:center;
+  background:white;
+  padding:60px 20px;
+  border-radius:8px;
+}
+
+.success-icon{
+  font-size:70px;
+  margin-bottom:15px;
+}
+
+@media(max-width:800px){
+
+  header{
+    flex-wrap:wrap;
+  }
+
+  .search{
+    order:3;
+    flex-basis:100%;
+  }
+
+  .checkout-layout{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+
 </head>
 
 <body>
 
 <header>
 
-  <a href="index.html" class="logo">
-    Lovetouch
-  </a>
+<a href="index.html"
+class="logo">
+Lovetouch
+</a>
 
-  <div class="secure">
-    🔒 Secure Checkout
-  </div>
+<div class="search">
+
+<input
+type="search"
+placeholder="Search products..."
+>
+
+</div>
+
+<a href="login.html"
+class="header-link">
+👤 Account
+</a>
+
+<a href="cart.html"
+class="header-link">
+🛒 Cart
+</a>
 
 </header>
 
-<main class="container">
+<nav>
 
-  <h1>Checkout</h1>
+<a href="index.html">
+Home
+</a>
 
-  <div id="checkoutContent">
+<a href="index.html#categories">
+Categories
+</a>
 
-    <div class="checkout-grid">
+<a href="cart.html">
+Cart
+</a>
 
-      <!-- CUSTOMER INFORMATION -->
+</nav>
 
-      <div>
+<main class="checkout-page">
 
-        <div class="box">
+<h1>
+Checkout
+</h1>
 
-          <h2>1. Delivery Information</h2>
+<br>
 
-          <div class="form-group">
+<div id="checkoutContent">
 
-            <label for="name">
-              Full Name
-            </label>
+<div class="checkout-layout">
 
-            <input
-              type="text"
-              id="name"
-              placeholder="Enter your full name"
-              required
-            >
+<!-- CUSTOMER INFORMATION -->
 
-          </div>
+<div class="box">
 
-          <div class="form-group">
+<h2>
+Delivery Information
+</h2>
 
-            <label for="phone">
-              Phone Number
-            </label>
+<form
+id="orderForm"
+onsubmit="placeOrder(event)"
+>
 
-            <input
-              type="tel"
-              id="phone"
-              placeholder="01XXXXXXXXX"
-              required
-            >
+<div class="form-group">
 
-          </div>
+<label>
+Full Name
+</label>
 
-          <div class="form-group">
+<input
+type="text"
+id="name"
+placeholder="Enter your full name"
+required
+>
 
-            <label for="email">
-              Email Address
-            </label>
+</div>
 
-            <input
-              type="email"
-              id="email"
-              placeholder="you@example.com"
-            >
+<div class="form-group">
 
-          </div>
+<label>
+Phone Number
+</label>
 
-          <div class="form-group">
+<input
+type="tel"
+id="phone"
+placeholder="01XXXXXXXXX"
+required
+>
 
-            <label for="address">
-              Delivery Address
-            </label>
+</div>
 
-            <textarea
-              id="address"
-              placeholder="House, road, area, city..."
-              required
-            ></textarea>
+<div class="form-group">
 
-          </div>
+<label>
+District
+</label>
 
-          <div class="form-group">
+<select id="district" required>
 
-            <label for="city">
-              City
-            </label>
+<option value="">
+Select District
+</option>
 
-            <select id="city">
+<option>Dhaka</option>
+<option>Chattogram</option>
+<option>Khulna</option>
+<option>Rajshahi</option>
+<option>Barishal</option>
+<option>Sylhet</option>
+<option>Rangpur</option>
+<option>Mymensingh</option>
+<option>Bagerhat</option>
+<option>Jashore</option>
+<option>Satkhira</option>
+<option>Other</option>
 
-              <option value="">
-                Select City
-              </option>
+</select>
 
-              <option>
-                Dhaka
-              </option>
+</div>
 
-              <option>
-                Chattogram
-              </option>
+<div class="form-group">
 
-              <option>
-                Khulna
-              </option>
+<label>
+Delivery Address
+</label>
 
-              <option>
-                Rajshahi
-              </option>
+<textarea
+id="address"
+placeholder="House, road, area and other details"
+required
+></textarea>
 
-              <option>
-                Sylhet
-              </option>
+</div>
 
-              <option>
-                Barishal
-              </option>
+<div class="payment">
 
-              <option>
-                Rangpur
-              </option>
+<h2>
+Payment Method
+</h2>
 
-              <option>
-                Mymensingh
-              </option>
+<div class="payment-option">
 
-            </select>
+<input
+type="radio"
+name="payment"
+value="Cash on Delivery"
+id="cod"
+checked
+>
 
-          </div>
+<label for="cod">
+💵 Cash on Delivery
+</label>
 
-        </div>
+</div>
 
-        <!-- PAYMENT -->
+<div class="payment-option">
 
-        <div class="box">
+<input
+type="radio"
+name="payment"
+value="Online Payment"
+id="online"
+>
 
-          <h2>2. Payment Method</h2>
+<label for="online">
+💳 Online Payment
+</label>
 
-          <label class="payment-option">
+</div>
 
-            <input
-              type="radio"
-              name="payment"
-              value="cod"
-              checked
-            >
+</div>
 
-            💵 Cash on Delivery
+<button
+type="submit"
+class="place-order"
+>
+Place Order
+</button>
 
-          </label>
+</form>
 
-          <label class="payment-option">
+</div>
 
-            <input
-              type="radio"
-              name="payment"
-              value="mobile"
-            >
+<!-- ORDER SUMMARY -->
 
-            📱 Mobile Payment
+<div class="box">
 
-          </label>
+<h2>
+Your Order
+</h2>
 
-          <label class="payment-option">
+<div id="orderItems">
+</div>
 
-            <input
-              type="radio"
-              name="payment"
-              value="card"
-            >
+<div class="summary-row">
 
-            💳 Debit / Credit Card
+<span>
+Subtotal
+</span>
 
-          </label>
+<strong id="subtotal">
+৳0
+</strong>
 
-        </div>
+</div>
 
-      </div>
+<div class="summary-row">
 
-      <!-- ORDER SUMMARY -->
+<span>
+Delivery
+</span>
 
-      <div>
+<strong id="delivery">
+৳0
+</strong>
 
-        <div class="box">
+</div>
 
-          <h2>Order Summary</h2>
+<div class="summary-row total">
 
-          <div class="summary-row">
+<span>
+Total
+</span>
 
-            <span>
-              Smartphone Pro Max × 1
-            </span>
+<strong id="total">
+৳0
+</strong>
 
-            <strong>
-              ৳25,999
-            </strong>
+</div>
 
-          </div>
+</div>
 
-          <div class="summary-row">
+</div>
 
-            <span>
-              Delivery
-            </span>
+</div>
 
-            <strong>
-              ৳100
-            </strong>
+<!-- EMPTY CART -->
 
-          </div>
+<div
+class="empty"
+id="emptyCart"
+style="display:none"
+>
 
-          <div class="summary-row total">
+<h2>
+Your cart is empty
+</h2>
 
-            <span>
-              Total
-            </span>
+<p>
+Please add products before checkout.
+</p>
 
-            <strong>
-              ৳26,099
-            </strong>
+<a
+href="index.html"
+class="shop-btn"
+>
+Start Shopping
+</a>
 
-          </div>
+</div>
 
-          <button
-            class="place-order"
-            onclick="placeOrder()"
-          >
-            Place Order
-          </button>
+<!-- SUCCESS -->
 
-          <p class="secure-note">
-            🔒 Your information is protected.
-            This demo checkout does not process real
-            payments yet.
-          </p>
+<div
+class="success"
+id="success"
+>
 
-        </div>
+<div class="success-icon">
+✅
+</div>
 
-      </div>
+<h2>
+Order Placed Successfully!
+</h2>
 
-    </div>
+<p id="orderNumber">
+</p>
 
-  </div>
+<p>
+Thank you for shopping with Lovetouch.
+</p>
 
-  <!-- SUCCESS MESSAGE -->
+<a
+href="index.html"
+class="shop-btn"
+>
+Continue Shopping
+</a>
 
-  <div class="success" id="success">
-
-    <h2>🎉 Order Placed Successfully!</h2>
-
-    <p>
-      Thank you for shopping with Lovetouch.
-    </p>
-
-    <p id="orderNumber"></p>
-
-    <a href="index.html" class="home-btn">
-      Continue Shopping
-    </a>
-
-  </div>
+</div>
 
 </main>
 
 <footer>
 
-  <h2>Lovetouch</h2>
+<h2>
+Lovetouch
+</h2>
 
-  <p>
-    © 2026 Lovetouch. All Rights Reserved.
-  </p>
+<p>
+© 2026 Lovetouch. All Rights Reserved.
+</p>
 
 </footer>
 
+<script src="products.js"></script>
+
+<script src="app.js"></script>
+
 <script>
 
-  function placeOrder() {
+function loadOrder(){
 
-    const name =
-      document.getElementById("name").value.trim();
+  const cart = getCart();
 
-    const phone =
-      document.getElementById("phone").value.trim();
+  const container =
+    document.getElementById(
+      "orderItems"
+    );
 
-    const address =
-      document.getElementById("address").value.trim();
+  container.innerHTML="";
 
-    if (!name || !phone || !address) {
+  let subtotal = 0;
 
-      alert(
-        "Please enter your name, phone number and delivery address."
-      );
+  let count = 0;
 
-      return;
+  Object.keys(cart).forEach(
+    function(productId){
+
+      const product =
+        products.find(
+          p => p.id === productId
+        );
+
+      if(!product){
+        return;
+      }
+
+      const quantity =
+        cart[productId];
+
+      const itemTotal =
+        product.price * quantity;
+
+      subtotal += itemTotal;
+
+      count += quantity;
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "order-item";
+
+      item.innerHTML = `
+
+        <span>
+          ${product.name}
+          × ${quantity}
+        </span>
+
+        <strong>
+          ৳${itemTotal.toLocaleString()}
+        </strong>
+
+      `;
+
+      container.appendChild(item);
+
     }
+  );
 
-    const orderNumber =
-      "LT" +
-      Math.floor(
-        100000 + Math.random() * 900000
-      );
+  if(count === 0){
 
-    document.getElementById("orderNumber").textContent =
-      "Your Order ID: " + orderNumber;
+    document.getElementById(
+      "checkoutContent"
+    ).style.display="none";
 
-    document.getElementById("checkoutContent").style.display =
-      "none";
+    document.getElementById(
+      "emptyCart"
+    ).style.display="block";
 
-    document.getElementById("success").style.display =
-      "block";
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    return;
 
   }
+
+  const delivery =
+    subtotal > 0 ? 100 : 0;
+
+  document.getElementById(
+    "subtotal"
+  ).textContent =
+    "৳" + subtotal.toLocaleString();
+
+  document.getElementById(
+    "delivery"
+  ).textContent =
+    "৳" + delivery.toLocaleString();
+
+  document.getElementById(
+    "total"
+  ).textContent =
+    "৳" +
+    (subtotal + delivery)
+    .toLocaleString();
+
+}
+
+
+function placeOrder(event){
+
+  event.preventDefault();
+
+  const cart = getCart();
+
+  if(
+    Object.keys(cart).length === 0
+  ){
+
+    alert(
+      "Your cart is empty."
+    );
+
+    return;
+
+  }
+
+  const name =
+    document.getElementById(
+      "name"
+    ).value.trim();
+
+  const phone =
+    document.getElementById(
+      "phone"
+    ).value.trim();
+
+  const district =
+    document.getElementById(
+      "district"
+    ).value;
+
+  const address =
+    document.getElementById(
+      "address"
+    ).value.trim();
+
+  const payment =
+    document.querySelector(
+      'input[name="payment"]:checked'
+    ).value;
+
+
+  const orderId =
+    "LT" +
+    Date.now()
+    .toString()
+    .slice(-8);
+
+
+  const order = {
+
+    id:orderId,
+
+    customer:{
+      name:name,
+      phone:phone,
+      district:district,
+      address:address
+    },
+
+    payment:payment,
+
+    items:cart,
+
+    date:new Date()
+      .toISOString()
+
+  };
+
+
+  const orders =
+    JSON.parse(
+      localStorage.getItem(
+        "lovetouchOrders"
+      )
+    ) || [];
+
+
+  orders.push(order);
+
+
+  localStorage.setItem(
+    "lovetouchOrders",
+    JSON.stringify(orders)
+  );
+
+
+  localStorage.removeItem(
+    "lovetouchCart"
+  );
+
+
+  document.getElementById(
+    "checkoutContent"
+  ).style.display="none";
+
+  document.getElementById(
+    "success"
+  ).style.display="block";
+
+  document.getElementById(
+    "orderNumber"
+  ).textContent =
+    "Your Order ID: " +
+    orderId;
+
+}
+
+
+loadOrder();
 
 </script>
 
 </body>
-</html>
+
+  </html>
