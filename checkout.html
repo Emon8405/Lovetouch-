@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Checkout | Lovetouch</title>
+  <meta name="description" content="Complete your Lovetouch order.">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #131921;
+      color: white;
+      padding: 15px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      color: #ff9900;
+      font-size: 28px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .secure {
+      color: #ddd;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 25px;
+    }
+
+    .box {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .box h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .payment-option {
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .payment-option input {
+      margin-right: 8px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+    }
+
+    .total {
+      border-top: 1px solid #ddd;
+      padding-top: 18px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .place-order {
+      width: 100%;
+      padding: 15px;
+      background: #ff9900;
+      border: none;
+      border-radius: 5px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .place-order:hover {
+      background: #f08800;
+    }
+
+    .secure-note {
+      margin-top: 15px;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .success {
+      display: none;
+      background: #e8f5e9;
+      border: 1px solid #81c784;
+      color: #2e7d32;
+      padding: 25px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .success h2 {
+      margin-bottom: 10px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: #232f3e;
+      color: white;
+      padding: 12px 22px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    footer {
+      background: #131921;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 800px) {
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        gap: 10px;
+      }
+
+      .secure {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <a href="index.html" class="logo">
+    Lovetouch
+  </a>
+
+  <div class="secure">
+    🔒 Secure Checkout
+  </div>
+
+</header>
+
+<main class="container">
+
+  <h1>Checkout</h1>
+
+  <div id="checkoutContent">
+
+    <div class="checkout-grid">
+
+      <!-- CUSTOMER INFORMATION -->
+
+      <div>
+
+        <div class="box">
+
+          <h2>1. Delivery Information</h2>
+
+          <div class="form-group">
+
+            <label for="name">
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              id="name"
+              placeholder="Enter your full name"
+              required
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="phone">
+              Phone Number
+            </label>
+
+            <input
+              type="tel"
+              id="phone"
+              placeholder="01XXXXXXXXX"
+              required
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="email">
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="you@example.com"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="address">
+              Delivery Address
+            </label>
+
+            <textarea
+              id="address"
+              placeholder="House, road, area, city..."
+              required
+            ></textarea>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="city">
+              City
+            </label>
+
+            <select id="city">
+
+              <option value="">
+                Select City
+              </option>
+
+              <option>
+                Dhaka
+              </option>
+
+              <option>
+                Chattogram
+              </option>
+
+              <option>
+                Khulna
+              </option>
+
+              <option>
+                Rajshahi
+              </option>
+
+              <option>
+                Sylhet
+              </option>
+
+              <option>
+                Barishal
+              </option>
+
+              <option>
+                Rangpur
+              </option>
+
+              <option>
+                Mymensingh
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <!-- PAYMENT -->
+
+        <div class="box">
+
+          <h2>2. Payment Method</h2>
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="cod"
+              checked
+            >
+
+            💵 Cash on Delivery
+
+          </label>
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="mobile"
+            >
+
+            📱 Mobile Payment
+
+          </label>
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="card"
+            >
+
+            💳 Debit / Credit Card
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- ORDER SUMMARY -->
+
+      <div>
+
+        <div class="box">
+
+          <h2>Order Summary</h2>
+
+          <div class="summary-row">
+
+            <span>
+              Smartphone Pro Max × 1
+            </span>
+
+            <strong>
+              ৳25,999
+            </strong>
+
+          </div>
+
+          <div class="summary-row">
+
+            <span>
+              Delivery
+            </span>
+
+            <strong>
+              ৳100
+            </strong>
+
+          </div>
+
+          <div class="summary-row total">
+
+            <span>
+              Total
+            </span>
+
+            <strong>
+              ৳26,099
+            </strong>
+
+          </div>
+
+          <button
+            class="place-order"
+            onclick="placeOrder()"
+          >
+            Place Order
+          </button>
+
+          <p class="secure-note">
+            🔒 Your information is protected.
+            This demo checkout does not process real
+            payments yet.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+
+  <div class="success" id="success">
+
+    <h2>🎉 Order Placed Successfully!</h2>
+
+    <p>
+      Thank you for shopping with Lovetouch.
+    </p>
+
+    <p id="orderNumber"></p>
+
+    <a href="index.html" class="home-btn">
+      Continue Shopping
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+
+  <h2>Lovetouch</h2>
+
+  <p>
+    © 2026 Lovetouch. All Rights Reserved.
+  </p>
+
+</footer>
+
+<script>
+
+  function placeOrder() {
+
+    const name =
+      document.getElementById("name").value.trim();
+
+    const phone =
+      document.getElementById("phone").value.trim();
+
+    const address =
+      document.getElementById("address").value.trim();
+
+    if (!name || !phone || !address) {
+
+      alert(
+        "Please enter your name, phone number and delivery address."
+      );
+
+      return;
+    }
+
+    const orderNumber =
+      "LT" +
+      Math.floor(
+        100000 + Math.random() * 900000
+      );
+
+    document.getElementById("orderNumber").textContent =
+      "Your Order ID: " + orderNumber;
+
+    document.getElementById("checkoutContent").style.display =
+      "none";
+
+    document.getElementById("success").style.display =
+      "block";
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+</script>
+
+</body>
+</html>
