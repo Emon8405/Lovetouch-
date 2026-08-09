@@ -25,6 +25,7 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:15px;
 }
 
 .admin-logo{
@@ -33,9 +34,24 @@ body{
   font-weight:bold;
 }
 
-.admin-header a{
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.admin-header a,
+.logout-btn{
   color:white;
   font-weight:bold;
+}
+
+.logout-btn{
+  background:#d62828;
+  border:0;
+  padding:9px 14px;
+  border-radius:5px;
+  cursor:pointer;
 }
 
 .admin-page{
@@ -164,6 +180,10 @@ body{
     grid-template-columns:1fr;
   }
 
+  .admin-header{
+    flex-wrap:wrap;
+  }
+
 }
 
 </style>
@@ -178,9 +198,20 @@ body{
 Lovetouch Admin
 </div>
 
+<div class="header-actions">
+
 <a href="index.html">
 ← Visit Store
 </a>
+
+<button
+class="logout-btn"
+onclick="logout()"
+>
+Logout
+</button>
+
+</div>
 
 </header>
 
@@ -270,7 +301,7 @@ Clear All Orders
 <div id="ordersList">
 
 <div class="loading">
-Loading orders...
+Checking login...
 </div>
 
 </div>
@@ -300,41 +331,57 @@ const supabaseClient =
   );
 
 
-/* LOAD ORDERS */
+/* LOGIN PROTECTION */
 
-async function getOrders(){
+async function checkAdmin(){
 
   const {
-    data,
-    error
+    data
   } =
-    await supabaseClient
-      .from("orders")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
+    await supabaseClient.auth.getSession();
 
-  if(error){
 
-    console.error(
-      "Supabase error:",
-      error
-    );
+  if(
+    !data.session
+  ){
 
-    showError(
-      "Could not load orders: " +
-      error.message
-    );
+    window.location.href =
+      "login.html";
 
-    return [];
+    return false;
 
   }
 
-  return data || [];
+
+  return true;
+
+}
+
+
+/* LOGOUT */
+
+async function logout(){
+
+  const {
+    error
+  } =
+    await supabaseClient.auth.signOut();
+
+
+  if(error){
+
+    alert(
+      "Logout failed: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "login.html";
 
 }
 
@@ -356,9 +403,60 @@ function showError(message){
 }
 
 
+/* LOAD ORDERS */
+
+async function getOrders(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    showError(
+      "Could not load orders: " +
+      error.message
+    );
+
+    return [];
+
+  }
+
+
+  return data || [];
+
+}
+
+
 /* RENDER DASHBOARD */
 
 async function renderDashboard(){
+
+  const loggedIn =
+    await checkAdmin();
+
+
+  if(!loggedIn){
+
+    return;
+
+  }
+
 
   const orders =
     await getOrders();
@@ -377,13 +475,18 @@ async function renderDashboard(){
 
 
   const customers =
-  new Set(
-    orders
-      .map(order =>
-        (order.phone || "").trim()
-      )
-      .filter(phone => phone !== "")
-  );
+    new Set(
+      orders
+        .map(
+          order =>
+            (order.phone || "")
+              .trim()
+        )
+        .filter(
+          phone =>
+            phone !== ""
+        )
+    );
 
 
   document.getElementById(
@@ -401,7 +504,9 @@ async function renderDashboard(){
   container.innerHTML="";
 
 
-  if(orders.length === 0){
+  if(
+    orders.length === 0
+  ){
 
     container.innerHTML = `
 
@@ -440,7 +545,7 @@ async function renderDashboard(){
       let productsHTML="";
 
 
-      let items =
+      const items =
         order.items || {};
 
 
@@ -456,7 +561,9 @@ async function renderDashboard(){
 
 
             if(!product){
+
               return;
+
             }
 
 
@@ -527,7 +634,7 @@ async function renderDashboard(){
 
           <div class="order-status">
 
-            ${order.status || "New"}
+            ${order.status || "New Order"}
 
           </div>
 
@@ -542,27 +649,27 @@ async function renderDashboard(){
 
           <p>
             Name:
-            ${order.customer_name}
+            ${order.customer_name || ""}
           </p>
 
           <p>
             Phone:
-            ${order.phone}
+            ${order.phone || ""}
           </p>
 
           <p>
             District:
-            ${order.district}
+            ${order.district || ""}
           </p>
 
           <p>
             Address:
-            ${order.address}
+            ${order.address || ""}
           </p>
 
           <p>
             Payment:
-            ${order.payment_method}
+            ${order.payment_method || ""}
           </p>
 
         </div>
@@ -607,7 +714,7 @@ async function renderDashboard(){
 }
 
 
-/* DELETE ONE ORDER */
+/* DELETE ONE */
 
 async function deleteOrder(id){
 
@@ -628,7 +735,10 @@ async function deleteOrder(id){
     await supabaseClient
       .from("orders")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if(error){
