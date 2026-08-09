@@ -1,501 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Login / Register | Lovetouch</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body {
-      background: #f5f5f5;
-      min-height: 100vh;
-    }
+<title>Admin Login | Lovetouch</title>
 
-    header {
-      background: #131921;
-      padding: 18px;
-      text-align: center;
-    }
+<style>
 
-    .logo {
-      color: #ff9900;
-      font-size: 30px;
-      font-weight: bold;
-      text-decoration: none;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    .container {
-      max-width: 430px;
-      margin: 50px auto;
-      padding: 0 20px;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background:#f5f5f5;
+  font-family:Arial,sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
-    .auth-box {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
+.login-box{
+  width:90%;
+  max-width:400px;
+  background:white;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 3px 15px rgba(0,0,0,.12);
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+.logo{
+  text-align:center;
+  color:#ff9900;
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
 
-    .tabs {
-      display: flex;
-      margin-bottom: 25px;
-      border-bottom: 1px solid #ddd;
-    }
+h2{
+  text-align:center;
+  margin-bottom:25px;
+}
 
-    .tab {
-      width: 50%;
-      padding: 12px;
-      border: none;
-      background: white;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-    }
+.form-group{
+  margin-bottom:18px;
+}
 
-    .tab.active {
-      color: #ff9900;
-      border-bottom: 3px solid #ff9900;
-    }
+label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+}
 
-    .form-group {
-      margin-bottom: 17px;
-    }
+input{
+  width:100%;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:15px;
+}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
+button{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:6px;
+  background:#ff9900;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #bbb;
-      border-radius: 5px;
-      outline: none;
-      font-size: 15px;
-    }
+button:disabled{
+  opacity:.6;
+}
 
-    input:focus {
-      border-color: #ff9900;
-    }
+#errorMessage{
+  display:none;
+  background:#ffe5e5;
+  color:#b00020;
+  padding:12px;
+  border-radius:6px;
+  margin-bottom:15px;
+}
 
-    .submit-btn {
-      width: 100%;
-      padding: 13px;
-      background: #ff9900;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
+.back{
+  display:block;
+  text-align:center;
+  margin-top:20px;
+  color:#333;
+}
 
-    .submit-btn:hover {
-      background: #f08800;
-    }
+</style>
 
-    .forgot {
-      display: block;
-      margin-top: 15px;
-      text-align: center;
-      color: #0066c0;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .message {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 5px;
-      text-align: center;
-      display: none;
-    }
-
-    .success {
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-
-    .error {
-      background: #ffebee;
-      color: #c62828;
-    }
-
-    .home {
-      display: block;
-      text-align: center;
-      margin-top: 25px;
-      color: #0066c0;
-      text-decoration: none;
-    }
-
-    footer {
-      background: #131921;
-      color: white;
-      text-align: center;
-      padding: 25px;
-      margin-top: 60px;
-    }
-
-    #registerForm {
-      display: none;
-    }
-  </style>
 </head>
 
 <body>
 
-<header>
-  <a href="index.html" class="logo">
-    Lovetouch
-  </a>
-</header>
+<div class="login-box">
 
-<main class="container">
+<div class="logo">
+Lovetouch
+</div>
 
-  <div class="auth-box">
+<h2>
+Admin Login
+</h2>
 
-    <h1>Welcome to Lovetouch</h1>
+<div id="errorMessage"></div>
 
-    <div class="tabs">
+<form id="loginForm">
 
-      <button
-        class="tab active"
-        id="loginTab"
-        onclick="showLogin()"
-      >
-        Login
-      </button>
+<div class="form-group">
 
-      <button
-        class="tab"
-        id="registerTab"
-        onclick="showRegister()"
-      >
-        Register
-      </button>
+<label>
+Email
+</label>
 
-    </div>
+<input
+type="email"
+id="email"
+placeholder="Enter admin email"
+required
+>
 
-    <!-- LOGIN -->
+</div>
 
-    <form id="loginForm" onsubmit="loginUser(event)">
+<div class="form-group">
 
-      <div class="form-group">
+<label>
+Password
+</label>
 
-        <label>Email</label>
+<input
+type="password"
+id="password"
+placeholder="Enter password"
+required
+>
 
-        <input
-          type="email"
-          id="loginEmail"
-          placeholder="Enter your email"
-          required
-        >
+</div>
 
-      </div>
+<button
+type="submit"
+id="loginButton"
+>
+Login
+</button>
 
-      <div class="form-group">
+</form>
 
-        <label>Password</label>
+<a
+href="index.html"
+class="back"
+>
+← Back to Store
+</a>
 
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="Enter your password"
-          required
-        >
+</div>
 
-      </div>
-
-      <button class="submit-btn" type="submit">
-        Login
-      </button>
-
-      <a href="#" class="forgot">
-        Forgot Password?
-      </a>
-
-    </form>
-
-    <!-- REGISTER -->
-
-    <form id="registerForm" onsubmit="registerUser(event)">
-
-      <div class="form-group">
-
-        <label>Full Name</label>
-
-        <input
-          type="text"
-          id="registerName"
-          placeholder="Enter your name"
-          required
-        >
-
-      </div>
-
-      <div class="form-group">
-
-        <label>Email</label>
-
-        <input
-          type="email"
-          id="registerEmail"
-          placeholder="Enter your email"
-          required
-        >
-
-      </div>
-
-      <div class="form-group">
-
-        <label>Phone</label>
-
-        <input
-          type="tel"
-          id="registerPhone"
-          placeholder="01XXXXXXXXX"
-          required
-        >
-
-      </div>
-
-      <div class="form-group">
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          id="registerPassword"
-          placeholder="Create a password"
-          minlength="6"
-          required
-        >
-
-      </div>
-
-      <div class="form-group">
-
-        <label>Confirm Password</label>
-
-        <input
-          type="password"
-          id="confirmPassword"
-          placeholder="Confirm password"
-          minlength="6"
-          required
-        >
-
-      </div>
-
-      <button class="submit-btn" type="submit">
-        Create Account
-      </button>
-
-    </form>
-
-    <div
-      id="message"
-      class="message"
-    ></div>
-
-    <a href="index.html" class="home">
-      ← Back to Lovetouch
-    </a>
-
-  </div>
-
-</main>
-
-<footer>
-
-  <p>
-    © 2026 Lovetouch. All Rights Reserved.
-  </p>
-
-</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-  function showLogin() {
+const SUPABASE_URL =
+  "https://yaukdrdygrlpdrhzpbvv.supabase.co";
 
-    document.getElementById("loginForm").style.display =
-      "block";
+const SUPABASE_KEY =
+  "sb_publishable_So5A7k5nsnnKyvC-MkiTMw_t6Q9poOO";
 
-    document.getElementById("registerForm").style.display =
-      "none";
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-    document.getElementById("loginTab").classList.add("active");
 
-    document.getElementById("registerTab").classList.remove("active");
+/* IF ALREADY LOGGED IN */
 
-    clearMessage();
-  }
+async function checkExistingLogin(){
 
-  function showRegister() {
+  const {
+    data
+  } =
+    await supabaseClient.auth.getSession();
 
-    document.getElementById("loginForm").style.display =
-      "none";
+  if(
+    data.session
+  ){
 
-    document.getElementById("registerForm").style.display =
-      "block";
-
-    document.getElementById("loginTab").classList.remove("active");
-
-    document.getElementById("registerTab").classList.add("active");
-
-    clearMessage();
-  }
-
-  function registerUser(event) {
-
-    event.preventDefault();
-
-    const name =
-      document.getElementById("registerName").value.trim();
-
-    const email =
-      document.getElementById("registerEmail").value.trim();
-
-    const phone =
-      document.getElementById("registerPhone").value.trim();
-
-    const password =
-      document.getElementById("registerPassword").value;
-
-    const confirmPassword =
-      document.getElementById("confirmPassword").value;
-
-    if (password !== confirmPassword) {
-
-      showMessage(
-        "Passwords do not match.",
-        "error"
-      );
-
-      return;
-    }
-
-    const user = {
-      name: name,
-      email: email,
-      phone: phone,
-      password: password
-    };
-
-    localStorage.setItem(
-      "lovetouchUser",
-      JSON.stringify(user)
-    );
-
-    showMessage(
-      "Account created successfully! You can now login.",
-      "success"
-    );
-
-    document.getElementById("registerForm").reset();
+    window.location.href =
+      "admin.html";
 
   }
 
-  function loginUser(event) {
+}
 
-    event.preventDefault();
+checkExistingLogin();
 
-    const email =
-      document.getElementById("loginEmail").value.trim();
 
-    const password =
-      document.getElementById("loginPassword").value;
+/* LOGIN */
 
-    const savedUser =
-      localStorage.getItem("lovetouchUser");
+document
+  .getElementById("loginForm")
+  .addEventListener(
+    "submit",
+    async function(event){
 
-    if (!savedUser) {
+      event.preventDefault();
 
-      showMessage(
-        "No account found. Please register first.",
-        "error"
-      );
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
 
-      return;
-    }
+      const password =
+        document
+          .getElementById("password")
+          .value;
 
-    const user = JSON.parse(savedUser);
+      const button =
+        document.getElementById(
+          "loginButton"
+        );
 
-    if (
-      email === user.email &&
-      password === user.password
-    ) {
+      const errorBox =
+        document.getElementById(
+          "errorMessage"
+        );
 
-      localStorage.setItem(
-        "lovetouchLoggedIn",
-        "true"
-      );
 
-      showMessage(
-        "Login successful! Welcome, " + user.name + ".",
-        "success"
-      );
+      errorBox.style.display =
+        "none";
 
-      setTimeout(function() {
+      button.disabled =
+        true;
 
-        window.location.href = "index.html";
+      button.textContent =
+        "Logging in...";
 
-      }, 1500);
 
-    } else {
+      const {
+        error
+      } =
+        await supabaseClient.auth
+          .signInWithPassword({
 
-      showMessage(
-        "Incorrect email or password.",
-        "error"
-      );
+            email:email,
+            password:password
+
+          });
+
+
+      if(error){
+
+        errorBox.textContent =
+          error.message;
+
+        errorBox.style.display =
+          "block";
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Login";
+
+        return;
+
+      }
+
+
+      window.location.href =
+        "admin.html";
 
     }
-
-  }
-
-  function showMessage(text, type) {
-
-    const message =
-      document.getElementById("message");
-
-    message.textContent = text;
-
-    message.className =
-      "message " + type;
-
-    message.style.display =
-      "block";
-
-  }
-
-  function clearMessage() {
-
-    const message =
-      document.getElementById("message");
-
-    message.style.display =
-      "none";
-
-  }
+  );
 
 </script>
 
 </body>
+
 </html>
