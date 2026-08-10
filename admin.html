@@ -40,18 +40,19 @@ body{
   gap:15px;
 }
 
-.admin-header a,
-.logout-btn{
+.admin-header a{
   color:white;
   font-weight:bold;
 }
 
 .logout-btn{
   background:#d62828;
+  color:white;
   border:0;
   padding:9px 14px;
   border-radius:5px;
   cursor:pointer;
+  font-weight:bold;
 }
 
 .admin-page{
@@ -107,10 +108,52 @@ body{
 }
 
 .order-status{
-  background:#fff3cd;
   padding:6px 12px;
   border-radius:20px;
   font-size:13px;
+  font-weight:bold;
+}
+
+.status-new{
+  background:#fff3cd;
+}
+
+.status-processing{
+  background:#dbeafe;
+}
+
+.status-shipped{
+  background:#e0e7ff;
+}
+
+.status-delivered{
+  background:#dcfce7;
+}
+
+.status-cancelled{
+  background:#fee2e2;
+}
+
+.status-control{
+  margin:15px 0;
+  padding:15px;
+  background:#f8f8f8;
+  border-radius:6px;
+}
+
+.status-control label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.status-select{
+  width:100%;
+  max-width:300px;
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:5px;
+  background:white;
 }
 
 .customer{
@@ -174,6 +217,14 @@ body{
   margin-bottom:20px;
 }
 
+.success{
+  background:#e7f7ed;
+  color:#137333;
+  padding:12px;
+  border-radius:6px;
+  margin-bottom:20px;
+}
+
 @media(max-width:700px){
 
   .stats{
@@ -182,6 +233,11 @@ body{
 
   .admin-header{
     flex-wrap:wrap;
+  }
+
+  .header-actions{
+    width:100%;
+    justify-content:space-between;
   }
 
 }
@@ -215,6 +271,7 @@ Logout
 
 </header>
 
+
 <main class="admin-page">
 
 <h1>
@@ -222,6 +279,7 @@ Dashboard
 </h1>
 
 <br>
+
 
 <div class="stats">
 
@@ -240,6 +298,7 @@ id="totalOrders"
 
 </div>
 
+
 <div class="stat">
 
 <div>
@@ -254,6 +313,7 @@ id="totalProducts"
 </div>
 
 </div>
+
 
 <div class="stat">
 
@@ -271,6 +331,7 @@ id="totalCustomers"
 </div>
 
 </div>
+
 
 <div class="orders-box">
 
@@ -296,7 +357,9 @@ Clear All Orders
 
 </div>
 
+
 <div id="message"></div>
+
 
 <div id="ordersList">
 
@@ -310,9 +373,11 @@ Checking login...
 
 </main>
 
+
 <script src="products.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -340,7 +405,6 @@ async function checkAdmin(){
   } =
     await supabaseClient.auth.getSession();
 
-
   if(
     !data.session
   ){
@@ -351,7 +415,6 @@ async function checkAdmin(){
     return false;
 
   }
-
 
   return true;
 
@@ -367,7 +430,6 @@ async function logout(){
   } =
     await supabaseClient.auth.signOut();
 
-
   if(error){
 
     alert(
@@ -379,14 +441,13 @@ async function logout(){
 
   }
 
-
   window.location.href =
     "login.html";
 
 }
 
 
-/* ERROR */
+/* MESSAGE */
 
 function showError(message){
 
@@ -395,6 +456,21 @@ function showError(message){
   ).innerHTML = `
 
     <div class="error">
+      ${message}
+    </div>
+
+  `;
+
+}
+
+
+function showSuccess(message){
+
+  document.getElementById(
+    "message"
+  ).innerHTML = `
+
+    <div class="success">
       ${message}
     </div>
 
@@ -421,12 +497,9 @@ async function getOrders(){
         }
       );
 
-
   if(error){
 
-    console.error(
-      error
-    );
+    console.error(error);
 
     showError(
       "Could not load orders: " +
@@ -437,8 +510,87 @@ async function getOrders(){
 
   }
 
-
   return data || [];
+
+}
+
+
+/* STATUS CLASS */
+
+function getStatusClass(status){
+
+  const value =
+    String(status || "")
+      .toLowerCase();
+
+  if(
+    value.includes("processing")
+  ){
+    return "status-processing";
+  }
+
+  if(
+    value.includes("shipped")
+  ){
+    return "status-shipped";
+  }
+
+  if(
+    value.includes("delivered")
+  ){
+    return "status-delivered";
+  }
+
+  if(
+    value.includes("cancelled")
+  ){
+    return "status-cancelled";
+  }
+
+  return "status-new";
+
+}
+
+
+/* UPDATE STATUS */
+
+async function updateOrderStatus(
+  id,
+  status
+){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .update({
+        status:status
+      })
+      .eq(
+        "id",
+        id
+      );
+
+
+  if(error){
+
+    alert(
+      "Status update failed: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showSuccess(
+    "Order status updated successfully."
+  );
+
+
+  renderDashboard();
 
 }
 
@@ -449,7 +601,6 @@ async function renderDashboard(){
 
   const loggedIn =
     await checkAdmin();
-
 
   if(!loggedIn){
 
@@ -605,6 +756,17 @@ async function renderDashboard(){
         );
 
 
+      const status =
+        order.status ||
+        "New Order";
+
+
+      const statusClass =
+        getStatusClass(
+          status
+        );
+
+
       const date =
         order.created_at
           ? new Date(
@@ -632,11 +794,70 @@ async function renderDashboard(){
 
           </div>
 
-          <div class="order-status">
 
-            ${order.status || "New Order"}
+          <div
+            class="order-status ${statusClass}"
+          >
+
+            ${status}
 
           </div>
+
+        </div>
+
+
+        <div class="status-control">
+
+          <label>
+            Order Status
+          </label>
+
+          <select
+            class="status-select"
+            onchange="
+              updateOrderStatus(
+                ${order.id},
+                this.value
+              )
+            "
+          >
+
+            <option
+              value="New Order"
+              ${status === "New Order" ? "selected" : ""}
+            >
+              New Order
+            </option>
+
+            <option
+              value="Processing"
+              ${status === "Processing" ? "selected" : ""}
+            >
+              Processing
+            </option>
+
+            <option
+              value="Shipped"
+              ${status === "Shipped" ? "selected" : ""}
+            >
+              Shipped
+            </option>
+
+            <option
+              value="Delivered"
+              ${status === "Delivered" ? "selected" : ""}
+            >
+              Delivered
+            </option>
+
+            <option
+              value="Cancelled"
+              ${status === "Cancelled" ? "selected" : ""}
+            >
+              Cancelled
+            </option>
+
+          </select>
 
         </div>
 
@@ -694,7 +915,9 @@ async function renderDashboard(){
 
         <button
           class="delete-btn"
-          onclick="deleteOrder(${order.id})"
+          onclick="
+            deleteOrder(${order.id})
+          "
         >
 
           Delete Order
@@ -714,7 +937,7 @@ async function renderDashboard(){
 }
 
 
-/* DELETE ONE */
+/* DELETE ONE ORDER */
 
 async function deleteOrder(id){
 
@@ -751,6 +974,11 @@ async function deleteOrder(id){
     return;
 
   }
+
+
+  showSuccess(
+    "Order deleted successfully."
+  );
 
 
   renderDashboard();
@@ -812,6 +1040,11 @@ async function clearOrders(){
     return;
 
   }
+
+
+  showSuccess(
+    "All orders deleted successfully."
+  );
 
 
   renderDashboard();
