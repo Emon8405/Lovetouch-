@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Product Details | Lovetouch</title>
-<meta name="description" content="View product details and shop online at Lovetouch.">
+
+<meta name="description"
+content="View product details and shop online at Lovetouch.">
 
 <link rel="stylesheet" href="style.css">
 
 <style>
+
 body{
   margin:0;
   background:#f5f5f5;
@@ -196,6 +203,7 @@ footer{
 }
 
 @media(max-width:700px){
+
   .product-box{
     grid-template-columns:1fr;
     padding:20px;
@@ -218,22 +226,38 @@ footer{
     order:3;
     flex-basis:100%;
   }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header>
 
-<a href="index.html" class="logo">Lovetouch</a>
+<a href="index.html" class="logo">
+Lovetouch
+</a>
 
 <div class="search">
-<input id="searchInput" type="search" placeholder="Search products...">
-<button onclick="searchProducts()">🔍</button>
+
+<input
+id="searchInput"
+type="search"
+placeholder="Search products..."
+>
+
+<button onclick="searchProducts()">
+🔍
+</button>
+
 </div>
 
-<a href="login.html" class="header-link">👤 Account</a>
+<a href="login.html" class="header-link">
+👤 Account
+</a>
 
 <a href="cart.html" class="header-link">
 🛒 Cart (<span id="cartCount">0</span>)
@@ -241,51 +265,173 @@ footer{
 
 </header>
 
+
 <nav>
-<a href="index.html">Home</a>
-<a href="index.html#categories">Categories</a>
-<a href="index.html#products">Products</a>
-<a href="index.html#deals">Deals</a>
+
+<a href="index.html">
+Home
+</a>
+
+<a href="index.html#categories">
+Categories
+</a>
+
+<a href="index.html#products">
+Products
+</a>
+
+<a href="index.html#deals">
+Deals
+</a>
+
 </nav>
+
 
 <main class="product-page">
 
 <div class="breadcrumb">
-<a href="index.html">Home</a> › Product Details
+
+<a href="index.html">
+Home
+</a>
+
+› Product Details
+
 </div>
 
-<div class="product-box" id="productContainer">
+
+<div
+class="product-box"
+id="productContainer"
+>
+
 Loading product...
+
 </div>
 
 </main>
 
+
 <footer>
-<h2>Lovetouch</h2>
-<p>Your online shopping destination.</p>
-<p>© 2026 Lovetouch. All Rights Reserved.</p>
+
+<h2>
+Lovetouch
+</h2>
+
+<p>
+Your online shopping destination.
+</p>
+
+<p>
+© 2026 Lovetouch. All Rights Reserved.
+</p>
+
 </footer>
+
 
 <script src="products.js"></script>
 <script src="app.js"></script>
 
+
 <script>
+
 
 function getProductId(){
 
-  const params = new URLSearchParams(window.location.search);
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
   return params.get("id");
 
 }
 
 
+function getCartDirect(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        "lovetouchCart"
+      );
+
+    if(!saved){
+
+      return {};
+
+    }
+
+    const cart =
+      JSON.parse(saved);
+
+    if(
+      cart &&
+      typeof cart === "object" &&
+      !Array.isArray(cart)
+    ){
+
+      return cart;
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Cart error:",
+      error
+    );
+
+  }
+
+  return {};
+
+}
+
+
+function saveCartDirect(cart){
+
+  localStorage.setItem(
+    "lovetouchCart",
+    JSON.stringify(cart)
+  );
+
+}
+
+
 function updateCartCount(){
 
-  if(typeof getCartItemCount === "function"){
+  const cart =
+    getCartDirect();
 
-    document.getElementById("cartCount").textContent =
-      getCartItemCount();
+  let count = 0;
+
+  Object.keys(cart).forEach(
+    function(id){
+
+      const quantity =
+        Number(cart[id]) || 0;
+
+      if(quantity > 0){
+
+        count += quantity;
+
+      }
+
+    }
+  );
+
+
+  const element =
+    document.getElementById(
+      "cartCount"
+    );
+
+  if(element){
+
+    element.textContent =
+      count;
 
   }
 
@@ -294,13 +440,19 @@ function updateCartCount(){
 
 function searchProducts(){
 
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
   const value =
-    document.getElementById("searchInput").value.trim();
+    input.value.trim();
 
   if(value){
 
     window.location.href =
-      "index.html?search=" + encodeURIComponent(value);
+      "index.html?search=" +
+      encodeURIComponent(value);
 
   }
 
@@ -310,81 +462,153 @@ function searchProducts(){
 function getDescription(product){
 
   if(product.description){
+
     return product.description;
+
   }
 
-  return "Discover the " +
+  return (
+    "Discover the " +
     product.name +
-    " at Lovetouch. Enjoy quality products, great prices and a simple online shopping experience.";
+    " at Lovetouch. Enjoy quality products, great prices and a simple online shopping experience."
+  );
 
 }
 
 
 function renderProduct(){
 
-  const id = getProductId();
+  const id =
+    getProductId();
+
 
   const product =
-    products.find(function(item){
-      return String(item.id) === String(id);
-    });
+    products.find(
+      function(item){
+
+        return String(item.id) === String(id);
+
+      }
+    );
+
 
   const container =
-    document.getElementById("productContainer");
+    document.getElementById(
+      "productContainer"
+    );
+
 
   if(!product){
 
     container.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:50px">
-        <h2>Product Not Found</h2>
-        <p>The product you are looking for is not available.</p>
-        <a href="index.html" class="back-btn">← Back to Store</a>
+
+      <div
+        style="
+          grid-column:1/-1;
+          text-align:center;
+          padding:50px
+        "
+      >
+
+        <h2>
+          Product Not Found
+        </h2>
+
+        <p>
+          The product you are looking for is not available.
+        </p>
+
+        <a
+          href="index.html"
+          class="back-btn"
+        >
+          ← Back to Store
+        </a>
+
       </div>
+
     `;
 
     return;
+
   }
 
+
   const stars =
-    "⭐".repeat(Number(product.rating) || 0);
+    "⭐".repeat(
+      Number(product.rating) || 0
+    );
+
 
   container.innerHTML = `
 
     <div class="product-image-large">
+
       ${product.icon || "🛍️"}
+
     </div>
+
 
     <div class="product-details">
 
-      <h1>${product.name}</h1>
+      <h1>
+        ${product.name}
+      </h1>
+
 
       <div class="rating">
         ${stars}
       </div>
 
+
       <div class="category">
-        Category: <strong>${product.category}</strong>
+
+        Category:
+        <strong>
+          ${product.category}
+        </strong>
+
       </div>
 
+
       <div class="price">
-        ৳${Number(product.price).toLocaleString()}
+
+        ৳${Number(
+          product.price
+        ).toLocaleString()}
 
         ${
           product.oldPrice
-          ? `<span class="old-price">
-              ৳${Number(product.oldPrice).toLocaleString()}
-             </span>`
-          : ""
+          ?
+          `<span class="old-price">
+            ৳${Number(
+              product.oldPrice
+            ).toLocaleString()}
+          </span>`
+          :
+          ""
         }
 
       </div>
 
+
       <p class="description">
+
         ${getDescription(product)}
+
       </p>
 
+
       <div class="quantity-box">
-        <label for="quantity"><strong>Quantity:</strong></label>
+
+        <label for="quantity">
+
+          <strong>
+            Quantity:
+          </strong>
+
+        </label>
+
 
         <input
           id="quantity"
@@ -392,21 +616,37 @@ function renderProduct(){
           min="1"
           value="1"
         >
+
       </div>
+
 
       <button
         class="add-cart"
         onclick="addToCartFromDetails('${product.id}')"
       >
+
         🛒 Add to Cart
+
       </button>
 
-      <div id="message" class="message">
+
+      <div
+        id="message"
+        class="message"
+      >
+
         Product added to cart successfully!
+
       </div>
 
-      <a href="index.html" class="back-btn">
+
+      <a
+        href="index.html"
+        class="back-btn"
+      >
+
         ← Continue Shopping
+
       </a>
 
     </div>
@@ -418,46 +658,67 @@ function renderProduct(){
 
 function addToCartFromDetails(id){
 
+  const quantityInput =
+    document.getElementById(
+      "quantity"
+    );
+
+
   const quantity =
     Math.max(
       1,
       parseInt(
-        document.getElementById("quantity").value
+        quantityInput.value
       ) || 1
     );
 
-  /*
-    Use the existing cart function from app.js.
-    The loop allows this page to work with the
-    existing one-item-at-a-time cart function.
-  */
 
-  if(typeof addProductToCart === "function"){
+  const cart =
+    getCartDirect();
 
-    for(let i = 0; i < quantity; i++){
-      addProductToCart(id);
-    }
 
-    updateCartCount();
+  const oldQuantity =
+    Number(cart[id]) || 0;
 
-    const message =
-      document.getElementById("message");
 
-    message.style.display = "block";
+  cart[id] =
+    oldQuantity + quantity;
 
-  }else{
 
-    alert("Cart system is not available.");
+  saveCartDirect(cart);
+
+
+  updateCartCount();
+
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+
+  if(message){
+
+    message.style.display =
+      "block";
 
   }
+
+
+  alert(
+    "Product added to cart!"
+  );
 
 }
 
 
 renderProduct();
+
 updateCartCount();
+
 
 </script>
 
 </body>
+
 </html>
