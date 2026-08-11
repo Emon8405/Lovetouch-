@@ -39,6 +39,7 @@ header{
   font-size:28px;
   font-weight:bold;
   white-space:nowrap;
+  text-decoration:none;
 }
 
 .search{
@@ -59,12 +60,14 @@ header{
   border:0;
   background:#ff9900;
   font-size:18px;
+  cursor:pointer;
 }
 
 .header-link{
   color:white;
   font-weight:bold;
   white-space:nowrap;
+  text-decoration:none;
 }
 
 nav{
@@ -75,6 +78,7 @@ nav{
 nav a{
   color:white;
   margin-right:25px;
+  text-decoration:none;
 }
 
 .hero{
@@ -101,6 +105,7 @@ nav a{
   border-radius:5px;
   margin-top:15px;
   font-weight:bold;
+  text-decoration:none;
 }
 
 .section{
@@ -170,6 +175,7 @@ nav a{
   color:white;
   padding:11px;
   border-radius:5px;
+  text-decoration:none;
 }
 
 .add-btn{
@@ -178,6 +184,30 @@ nav a{
   padding:11px;
   border-radius:5px;
   font-weight:bold;
+  cursor:pointer;
+}
+
+.no-results{
+  grid-column:1/-1;
+  background:white;
+  padding:50px 20px;
+  text-align:center;
+  border-radius:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.no-results h3{
+  margin-bottom:10px;
+}
+
+.clear-search{
+  display:inline-block;
+  margin-top:15px;
+  background:#232f3e;
+  color:white;
+  padding:11px 20px;
+  border-radius:5px;
+  text-decoration:none;
 }
 
 footer{
@@ -232,11 +262,13 @@ footer{
 
 <body>
 
+
 <header>
 
 <a href="index.html" class="logo">
 Lovetouch
 </a>
+
 
 <div class="search">
 
@@ -244,23 +276,36 @@ Lovetouch
 id="searchInput"
 type="search"
 placeholder="Search products..."
+autocomplete="off"
 >
 
-<button onclick="searchProducts()">
+<button
+type="button"
+onclick="searchProducts()"
+>
 🔍
 </button>
 
 </div>
 
-<a href="account.html" class="header-link">
+
+<a
+href="account.html"
+class="header-link"
+>
 👤 Account
 </a>
 
-<a href="cart.html" class="header-link">
+
+<a
+href="cart.html"
+class="header-link"
+>
 🛒 Cart (<span id="cartCount">0</span>)
 </a>
 
 </header>
+
 
 <nav>
 
@@ -282,6 +327,7 @@ Deals
 
 </nav>
 
+
 <section class="hero">
 
 <div>
@@ -295,13 +341,17 @@ Discover electronics, fashion, beauty, home products
 and more at great prices.
 </p>
 
-<a href="#products" class="shop-btn">
+<a
+href="#products"
+class="shop-btn"
+>
 Shop Now
 </a>
 
 </div>
 
 </section>
+
 
 <section
 class="section"
@@ -312,7 +362,9 @@ id="categories"
 Shop by Category
 </h2>
 
+
 <div class="categories">
+
 
 <div
 class="category"
@@ -329,6 +381,7 @@ Electronics
 
 </div>
 
+
 <div
 class="category"
 onclick="filterCategory('Fashion')"
@@ -343,6 +396,7 @@ Fashion
 </h3>
 
 </div>
+
 
 <div
 class="category"
@@ -359,6 +413,7 @@ Beauty
 
 </div>
 
+
 <div
 class="category"
 onclick="filterCategory('Home')"
@@ -373,6 +428,7 @@ Home
 </h3>
 
 </div>
+
 
 <div
 class="category"
@@ -389,6 +445,7 @@ Gaming
 
 </div>
 
+
 <div
 class="category"
 onclick="showAllProducts()"
@@ -404,9 +461,11 @@ All Products
 
 </div>
 
+
 </div>
 
 </section>
+
 
 <section
 class="section"
@@ -423,14 +482,16 @@ Check out our latest products and special offers.
 
 </section>
 
+
 <section
 class="section"
 id="products"
 >
 
-<h2>
+<h2 id="productsTitle">
 Featured Products
 </h2>
+
 
 <div
 class="products"
@@ -439,6 +500,7 @@ id="productList"
 </div>
 
 </section>
+
 
 <footer>
 
@@ -456,31 +518,78 @@ Your online shopping destination.
 
 </footer>
 
+
 <script src="products.js"></script>
 
 <script src="app.js"></script>
 
+
 <script>
+
+
+/* =========================================
+   RENDER PRODUCTS
+========================================= */
 
 function renderProducts(list){
 
   const container =
-    document.getElementById("productList");
+    document.getElementById(
+      "productList"
+    );
 
-  container.innerHTML="";
+
+  container.innerHTML = "";
+
+
+  if(!list || list.length === 0){
+
+    container.innerHTML = `
+
+      <div class="no-results">
+
+        <h3>
+          No products found
+        </h3>
+
+        <p>
+          Try another product name or category.
+        </p>
+
+        <a
+          href="index.html"
+          class="clear-search"
+        >
+          Show All Products
+        </a>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
 
   list.forEach(function(product){
 
     const card =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    card.className="product-card";
 
-    card.innerHTML=`
+    card.className =
+      "product-card";
+
+
+    card.innerHTML = `
 
       <div class="product-image">
-        ${product.icon}
+        ${product.icon || "🛍️"}
       </div>
+
 
       <div class="product-info">
 
@@ -488,43 +597,68 @@ function renderProducts(list){
           ${product.name}
         </h3>
 
+
         <div class="rating">
-          ${"⭐".repeat(product.rating)}
+          ${"⭐".repeat(
+            Number(product.rating) || 0
+          )}
         </div>
+
 
         <div class="price">
-          ৳${product.price.toLocaleString()}
 
-          <span class="old-price">
-            ৳${product.oldPrice.toLocaleString()}
-          </span>
+          ৳${Number(
+            product.price || 0
+          ).toLocaleString()}
+
+
+          ${
+            product.oldPrice
+            ?
+            `
+            <span class="old-price">
+              ৳${Number(
+                product.oldPrice
+              ).toLocaleString()}
+            </span>
+            `
+            :
+            ""
+          }
+
         </div>
 
+
         <p>
-          ${product.category}
+          ${product.category || ""}
         </p>
+
 
         <div class="product-buttons">
 
+
           <a
-            href="product.html?id=${product.id}"
+            href="product.html?id=${encodeURIComponent(product.id)}"
             class="view-btn"
           >
             View Details
           </a>
 
+
           <button
             class="add-btn"
-            onclick="addProductToCart('${product.id}')"
+            onclick="addProductToCart('${String(product.id).replace(/'/g,"\\'")}')"
           >
             🛒 Add to Cart
           </button>
+
 
         </div>
 
       </div>
 
     `;
+
 
     container.appendChild(card);
 
@@ -533,86 +667,264 @@ function renderProducts(list){
 }
 
 
+/* =========================================
+   SEARCH PRODUCTS
+========================================= */
+
 function searchProducts(){
 
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+
+  if(!input){
+    return;
+  }
+
+
   const search =
-    document
-    .getElementById("searchInput")
-    .value
-    .toLowerCase()
-    .trim();
+    input.value
+      .toLowerCase()
+      .trim();
+
+
+  if(!search){
+
+    renderProducts(products);
+
+    document.getElementById(
+      "productsTitle"
+    ).textContent =
+      "Featured Products";
+
+    return;
+
+  }
+
 
   const filtered =
     products.filter(function(product){
 
+      const name =
+        String(
+          product.name || ""
+        ).toLowerCase();
+
+
+      const category =
+        String(
+          product.category || ""
+        ).toLowerCase();
+
+
       return (
-        product.name
-        .toLowerCase()
-        .includes(search)
-        ||
-        product.category
-        .toLowerCase()
-        .includes(search)
+        name.includes(search) ||
+        category.includes(search)
       );
 
     });
 
+
+  document.getElementById(
+    "productsTitle"
+  ).textContent =
+    'Search Results for "' +
+    input.value.trim() +
+    '"';
+
+
   renderProducts(filtered);
+
+
+  document.getElementById(
+    "products"
+  ).scrollIntoView({
+    behavior:"smooth"
+  });
 
 }
 
+
+/* =========================================
+   ENTER KEY SEARCH
+========================================= */
+
+document
+.getElementById("searchInput")
+.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+
+      event.preventDefault();
+
+      searchProducts();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   CATEGORY FILTER
+========================================= */
 
 function filterCategory(category){
 
   const filtered =
     products.filter(function(product){
 
-      return product.category === category;
+      return String(
+        product.category || ""
+      ).toLowerCase()
+      ===
+      String(category).toLowerCase();
 
     });
+
+
+  document.getElementById(
+    "searchInput"
+  ).value = "";
+
+
+  document.getElementById(
+    "productsTitle"
+  ).textContent =
+    category + " Products";
+
 
   renderProducts(filtered);
 
-  document
-    .getElementById("products")
-    .scrollIntoView({
-      behavior:"smooth"
-    });
+
+  document.getElementById(
+    "products"
+  ).scrollIntoView({
+    behavior:"smooth"
+  });
 
 }
 
+
+/* =========================================
+   SHOW ALL PRODUCTS
+========================================= */
 
 function showAllProducts(){
 
+  document.getElementById(
+    "searchInput"
+  ).value = "";
+
+
+  document.getElementById(
+    "productsTitle"
+  ).textContent =
+    "Featured Products";
+
+
   renderProducts(products);
 
-  document
-    .getElementById("products")
-    .scrollIntoView({
-      behavior:"smooth"
-    });
+
+  document.getElementById(
+    "products"
+  ).scrollIntoView({
+    behavior:"smooth"
+  });
 
 }
 
 
+/* =========================================
+   LOAD SEARCH FROM URL
+========================================= */
+
+function loadURLSearch(){
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  const search =
+    params.get("search");
+
+
+  if(!search){
+
+    renderProducts(products);
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+
+  input.value =
+    search;
+
+
+  searchProducts();
+
+}
+
+
+/* =========================================
+   CART COUNT
+========================================= */
+
 function updateCartCount(){
+
+  if(
+    typeof getCartItemCount !==
+    "function"
+  ){
+    return;
+  }
+
 
   const count =
     getCartItemCount();
 
-  document
-    .getElementById("cartCount")
-    .textContent = count;
+
+  const element =
+    document.getElementById(
+      "cartCount"
+    );
+
+
+  if(element){
+
+    element.textContent =
+      count;
+
+  }
 
 }
 
 
-renderProducts(products);
+/* =========================================
+   START
+========================================= */
+
+loadURLSearch();
 
 updateCartCount();
 
+
 </script>
+
 
 </body>
 
-</html>
+  </html>
