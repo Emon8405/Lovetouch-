@@ -271,7 +271,6 @@ Logout
 
 </header>
 
-
 <main class="admin-page">
 
 <h1>
@@ -279,7 +278,6 @@ Dashboard
 </h1>
 
 <br>
-
 
 <div class="stats">
 
@@ -298,7 +296,6 @@ id="totalOrders"
 
 </div>
 
-
 <div class="stat">
 
 <div>
@@ -313,7 +310,6 @@ id="totalProducts"
 </div>
 
 </div>
-
 
 <div class="stat">
 
@@ -331,7 +327,6 @@ id="totalCustomers"
 </div>
 
 </div>
-
 
 <div class="orders-box">
 
@@ -357,9 +352,7 @@ Clear All Orders
 
 </div>
 
-
 <div id="message"></div>
-
 
 <div id="ordersList">
 
@@ -373,11 +366,9 @@ Checking login...
 
 </main>
 
-
 <script src="products.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -542,7 +533,7 @@ function getStatusClass(status){
   }
 
   if(
-    value.includes("cancelled")
+    value.includes("cancel")
   ){
     return "status-cancelled";
   }
@@ -707,7 +698,7 @@ async function renderDashboard(){
             const product =
               products.find(
                 p =>
-                  p.id === productId
+                  String(p.id) === String(productId)
               );
 
 
@@ -758,7 +749,7 @@ async function renderDashboard(){
 
       const status =
         order.status ||
-        "New Order";
+        "New";
 
 
       const statusClass =
@@ -823,10 +814,10 @@ async function renderDashboard(){
           >
 
             <option
-              value="New Order"
-              ${status === "New Order" ? "selected" : ""}
+              value="New"
+              ${status === "New" ? "selected" : ""}
             >
-              New Order
+              New
             </option>
 
             <option
@@ -1060,4 +1051,4 @@ renderDashboard();
 
 </body>
 
-  </html>
+</html>
