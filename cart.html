@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Shopping Cart | Lovetouch</title>
 
@@ -219,7 +222,6 @@ nav a{
   border-radius:5px;
   font-weight:bold;
   margin-top:18px;
-  cursor:pointer;
 }
 
 .continue-btn{
@@ -309,7 +311,9 @@ footer{
 
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -341,6 +345,7 @@ placeholder="Search products..."
 
 </header>
 
+
 <nav>
 
 <a href="index.html">
@@ -361,6 +366,7 @@ Deals
 
 </nav>
 
+
 <main class="cart-page">
 
 <h1 class="cart-title">
@@ -372,6 +378,7 @@ Loading cart...
 </div>
 
 </main>
+
 
 <footer>
 
@@ -389,35 +396,64 @@ Your online shopping destination.
 
 </footer>
 
+
+<!-- PRODUCTS -->
+
 <script src="products.js"></script>
+
+<!-- MAIN APP -->
+
 <script src="app.js"></script>
 
+
 <script>
+
+
+/* =========================================
+   CART DATA
+========================================= */
 
 function getCartData(){
 
   try{
 
-    const saved = localStorage.getItem("lovetouchCart");
+    const saved =
+      localStorage.getItem("lovetouchCart");
 
     if(!saved){
       return {};
     }
 
-    const parsed = JSON.parse(saved);
+    const cart =
+      JSON.parse(saved);
 
-    if(parsed && typeof parsed === "object" && !Array.isArray(parsed)){
-      return parsed;
+    if(
+      cart &&
+      typeof cart === "object" &&
+      !Array.isArray(cart)
+    ){
+
+      return cart;
+
     }
 
   }catch(error){
-    console.error("Cart read error:", error);
+
+    console.error(
+      "Cart error:",
+      error
+    );
+
   }
 
   return {};
 
 }
 
+
+/* =========================================
+   SAVE CART
+========================================= */
 
 function saveCartData(cart){
 
@@ -429,31 +465,69 @@ function saveCartData(cart){
 }
 
 
-function findProduct(id){
+/* =========================================
+   FIND PRODUCT
+========================================= */
 
-  if(!Array.isArray(window.products)){
+function findCartProduct(id){
+
+  if(
+    typeof products === "undefined" ||
+    !Array.isArray(products)
+  ){
+
     return null;
+
   }
 
-  return window.products.find(function(product){
-    return String(product.id) === String(id);
-  }) || null;
+  return products.find(
+    function(product){
+
+      return String(product.id) === String(id);
+
+    }
+  ) || null;
 
 }
 
 
+/* =========================================
+   RENDER CART
+========================================= */
+
 function renderCart(){
 
-  const cart = getCartData();
-
-  const items = Object.keys(cart).filter(function(id){
-    return findProduct(id) && Number(cart[id]) > 0;
-  });
+  const cart =
+    getCartData();
 
   const container =
-    document.getElementById("cartContainer");
+    document.getElementById(
+      "cartContainer"
+    );
 
-  if(items.length === 0){
+  const ids =
+    Object.keys(cart);
+
+  const validItems =
+    ids.filter(function(id){
+
+      const product =
+        findCartProduct(id);
+
+      const quantity =
+        Number(cart[id]);
+
+      return (
+        product &&
+        quantity > 0
+      );
+
+    });
+
+
+  /* EMPTY CART */
+
+  if(validItems.length === 0){
 
     container.innerHTML = `
 
@@ -461,13 +535,22 @@ function renderCart(){
 
         <div class="empty-cart">
 
-          <div class="empty-cart-icon">🛒</div>
+          <div class="empty-cart-icon">
+            🛒
+          </div>
 
-          <h2>Your cart is empty</h2>
+          <h2>
+            Your cart is empty
+          </h2>
 
-          <p>You haven't added any products yet.</p>
+          <p>
+            You haven't added any products yet.
+          </p>
 
-          <a href="index.html" class="shop-btn">
+          <a
+            href="index.html"
+            class="shop-btn"
+          >
             Continue Shopping
           </a>
 
@@ -478,73 +561,118 @@ function renderCart(){
     `;
 
     updateCartCountDisplay();
+
     return;
 
   }
 
+
   let subtotal = 0;
+
   let totalItems = 0;
 
+
   let html = `
+
     <div class="cart-layout">
 
       <div class="cart-items">
+
   `;
 
-  items.forEach(function(id){
 
-    const product = findProduct(id);
-    const quantity = Math.max(1, Number(cart[id]) || 1);
-    const itemTotal = Number(product.price) * quantity;
+  validItems.forEach(function(id){
+
+    const product =
+      findCartProduct(id);
+
+    const quantity =
+      Number(cart[id]);
+
+    const itemTotal =
+      Number(product.price) * quantity;
+
 
     subtotal += itemTotal;
+
     totalItems += quantity;
+
 
     html += `
 
       <div class="cart-item">
 
         <div class="cart-icon">
+
           ${product.icon || "🛍️"}
+
         </div>
+
 
         <div>
 
-          <h3>${product.name}</h3>
+          <h3>
+            ${product.name}
+          </h3>
+
 
           <div class="category">
             ${product.category}
           </div>
 
+
           <div class="item-price">
-            ৳${Number(product.price).toLocaleString()}
+            ৳${Number(
+              product.price
+            ).toLocaleString()}
           </div>
+
 
           <div class="quantity">
 
-            <button onclick="changeQuantity('${product.id}', -1)">
+            <button
+              onclick="changeQuantity(
+                '${product.id}',
+                -1
+              )"
+            >
               −
             </button>
 
-            <span>${quantity}</span>
 
-            <button onclick="changeQuantity('${product.id}', 1)">
+            <span>
+              ${quantity}
+            </span>
+
+
+            <button
+              onclick="changeQuantity(
+                '${product.id}',
+                1
+              )"
+            >
               +
             </button>
 
           </div>
 
+
           <button
             class="remove-btn"
-            onclick="removeFromCart('${product.id}')"
+            onclick="removeFromCart(
+              '${product.id}'
+            )"
           >
             Remove
           </button>
 
         </div>
 
+
         <div class="item-total">
+
           ৳${itemTotal.toLocaleString()}
+
         </div>
 
       </div>
@@ -553,39 +681,83 @@ function renderCart(){
 
   });
 
+
   html += `
 
       </div>
 
+
       <aside class="summary">
 
-        <h2>Order Summary</h2>
+        <h2>
+          Order Summary
+        </h2>
+
 
         <div class="summary-row">
-          <span>Items</span>
-          <span>${totalItems}</span>
+
+          <span>
+            Items
+          </span>
+
+          <span>
+            ${totalItems}
+          </span>
+
         </div>
 
-        <div class="summary-row">
-          <span>Subtotal</span>
-          <span>৳${subtotal.toLocaleString()}</span>
-        </div>
 
         <div class="summary-row">
-          <span>Delivery</span>
-          <span>Free</span>
+
+          <span>
+            Subtotal
+          </span>
+
+          <span>
+            ৳${subtotal.toLocaleString()}
+          </span>
+
         </div>
+
+
+        <div class="summary-row">
+
+          <span>
+            Delivery
+          </span>
+
+          <span>
+            Free
+          </span>
+
+        </div>
+
 
         <div class="summary-total">
-          <span>Total</span>
-          <span>৳${subtotal.toLocaleString()}</span>
+
+          <span>
+            Total
+          </span>
+
+          <span>
+            ৳${subtotal.toLocaleString()}
+          </span>
+
         </div>
 
-        <a href="checkout.html" class="checkout-btn">
+
+        <a
+          href="checkout.html"
+          class="checkout-btn"
+        >
           Proceed to Checkout
         </a>
 
-        <a href="index.html" class="continue-btn">
+
+        <a
+          href="index.html"
+          class="continue-btn"
+        >
           ← Continue Shopping
         </a>
 
@@ -595,33 +767,60 @@ function renderCart(){
 
   `;
 
-  container.innerHTML = html;
+
+  container.innerHTML =
+    html;
+
 
   updateCartCountDisplay();
 
 }
 
 
-function changeQuantity(id, change){
+/* =========================================
+   CHANGE QUANTITY
+========================================= */
 
-  const cart = getCartData();
+function changeQuantity(
+  id,
+  change
+){
 
-  if(!cart[id]){
+  const cart =
+    getCartData();
+
+
+  if(
+    !Object.prototype.hasOwnProperty.call(
+      cart,
+      id
+    )
+  ){
+
     return;
+
   }
 
-  const newQuantity =
-    Number(cart[id]) + Number(change);
 
-  if(newQuantity <= 0){
+  let quantity =
+    Number(cart[id]) || 0;
+
+
+  quantity +=
+    Number(change);
+
+
+  if(quantity <= 0){
 
     delete cart[id];
 
   }else{
 
-    cart[id] = newQuantity;
+    cart[id] =
+      quantity;
 
   }
+
 
   saveCartData(cart);
 
@@ -629,53 +828,100 @@ function changeQuantity(id, change){
 
 }
 
+
+/* =========================================
+   REMOVE PRODUCT
+========================================= */
 
 function removeFromCart(id){
 
-  const cart = getCartData();
+  const cart =
+    getCartData();
+
 
   delete cart[id];
 
+
   saveCartData(cart);
+
 
   renderCart();
 
 }
 
 
+/* =========================================
+   UPDATE CART COUNT
+========================================= */
+
 function updateCartCountDisplay(){
 
-  const cart = getCartData();
+  const cart =
+    getCartData();
+
 
   let count = 0;
 
-  Object.keys(cart).forEach(function(id){
 
-    const quantity = Number(cart[id]) || 0;
+  Object.keys(cart).forEach(
+    function(id){
 
-    if(findProduct(id) && quantity > 0){
-      count += quantity;
+      const product =
+        findCartProduct(id);
+
+      const quantity =
+        Number(cart[id]) || 0;
+
+
+      if(
+        product &&
+        quantity > 0
+      ){
+
+        count += quantity;
+
+      }
+
     }
+  );
 
-  });
 
   const element =
-    document.getElementById("cartCount");
+    document.getElementById(
+      "cartCount"
+    );
+
 
   if(element){
-    element.textContent = count;
+
+    element.textContent =
+      count;
+
   }
 
 }
 
 
+/* =========================================
+   SEARCH
+========================================= */
+
 function searchProducts(){
 
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+
+  if(!input){
+    return;
+  }
+
+
   const value =
-    document
-      .getElementById("searchInput")
-      .value
-      .trim();
+    input.value.trim();
+
 
   if(value){
 
@@ -688,9 +934,23 @@ function searchProducts(){
 }
 
 
-renderCart();
+/* =========================================
+   START
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    renderCart();
+
+  }
+);
+
 
 </script>
 
+
 </body>
+
 </html>
