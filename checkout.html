@@ -572,10 +572,10 @@ function getOrderTotals(cart){
   Object.keys(cart).forEach(
     function(productId){
 
-      const product =
-        products.find(
-          p => p.id === productId
-        );
+    const product =
+  products.find(
+    p => String(p.id) === String(productId)
+  );
 
       if(!product){
         return;
@@ -627,9 +627,9 @@ function loadOrder(){
     function(productId){
 
       const product =
-        products.find(
-          p => p.id === productId
-        );
+  products.find(
+    p => String(p.id) === String(productId)
+  );
 
       if(!product){
         return;
