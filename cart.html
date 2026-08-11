@@ -394,181 +394,36 @@ Your online shopping destination.
 
 <script>
 
-function getStoredCart(){
+function getCartData(){
 
   try{
 
-    const possibleKeys = [
-      "cart",
-      "lovetouchCart",
-      "shoppingCart"
-    ];
+    const saved = localStorage.getItem("lovetouchCart");
 
-    for(const key of possibleKeys){
+    if(!saved){
+      return {};
+    }
 
-      const saved =
-        localStorage.getItem(key);
+    const parsed = JSON.parse(saved);
 
-      if(saved){
-
-        const parsed =
-          JSON.parse(saved);
-
-        if(Array.isArray(parsed)){
-          return {
-            key:key,
-            data:parsed
-          };
-        }
-
-        if(parsed && typeof parsed === "object"){
-          return {
-            key:key,
-            data:parsed
-          };
-        }
-
-      }
-
+    if(parsed && typeof parsed === "object" && !Array.isArray(parsed)){
+      return parsed;
     }
 
   }catch(error){
-
-    console.error(error);
-
+    console.error("Cart read error:", error);
   }
 
-  return {
-    key:"cart",
-    data:[]
-  };
+  return {};
 
 }
 
 
-function normalizeCart(){
-
-  const stored =
-    getStoredCart();
-
-  const data =
-    stored.data;
-
-  const items = [];
-
-  if(Array.isArray(data)){
-
-    data.forEach(function(item){
-
-      if(typeof item === "string"){
-
-        items.push({
-          id:String(item),
-          quantity:1
-        });
-
-      }else if(item){
-
-        const id =
-          item.id ??
-          item.productId ??
-          item.product_id;
-
-        const quantity =
-          Number(
-            item.quantity ??
-            item.qty ??
-            item.count ??
-            1
-          );
-
-        if(id !== undefined){
-
-          items.push({
-            id:String(id),
-            quantity:Math.max(1,quantity)
-          });
-
-        }
-
-      }
-
-    });
-
-  }else if(data && typeof data === "object"){
-
-    Object.keys(data).forEach(function(id){
-
-      const value = data[id];
-
-      if(typeof value === "number"){
-
-        items.push({
-          id:String(id),
-          quantity:Math.max(1,value)
-        });
-
-      }else if(value && typeof value === "object"){
-
-        items.push({
-          id:String(
-            value.id ??
-            value.productId ??
-            id
-          ),
-          quantity:Math.max(
-            1,
-            Number(value.quantity ?? value.qty ?? 1)
-          )
-        });
-
-      }
-
-    });
-
-  }
-
-  /*
-    Combine duplicate product IDs.
-  */
-
-  const combined = {};
-
-  items.forEach(function(item){
-
-    if(!combined[item.id]){
-      combined[item.id] = 0;
-    }
-
-    combined[item.id] += item.quantity;
-
-  });
-
-  return {
-    key:stored.key,
-    items:Object.keys(combined).map(function(id){
-
-      return {
-        id:id,
-        quantity:combined[id]
-      };
-
-    })
-  };
-
-}
-
-
-function saveCart(items){
-
-  /*
-    Keep the cart compatible with the existing
-    Lovetouch cart system: [{id, quantity}, ...]
-  */
+function saveCartData(cart){
 
   localStorage.setItem(
-    "cart",
-    JSON.stringify(items)
+    "lovetouchCart",
+    JSON.stringify(cart)
   );
 
 }
@@ -580,10 +435,8 @@ function findProduct(id){
     return null;
   }
 
-  return products.find(function(product){
-
+  return window.products.find(function(product){
     return String(product.id) === String(id);
-
   }) || null;
 
 }
@@ -591,22 +444,11 @@ function findProduct(id){
 
 function renderCart(){
 
-  const normalized =
-    normalizeCart();
+  const cart = getCartData();
 
-  let items =
-    normalized.items;
-
-  /*
-    Remove products that no longer exist.
-  */
-
-  items =
-    items.filter(function(item){
-
-      return findProduct(item.id);
-
-    });
+  const items = Object.keys(cart).filter(function(id){
+    return findProduct(id) && Number(cart[id]) > 0;
+  });
 
   const container =
     document.getElementById("cartContainer");
@@ -619,22 +461,13 @@ function renderCart(){
 
         <div class="empty-cart">
 
-          <div class="empty-cart-icon">
-            🛒
-          </div>
+          <div class="empty-cart-icon">🛒</div>
 
-          <h2>
-            Your cart is empty
-          </h2>
+          <h2>Your cart is empty</h2>
 
-          <p>
-            You haven't added any products yet.
-          </p>
+          <p>You haven't added any products yet.</p>
 
-          <a
-            href="index.html"
-            class="shop-btn"
-          >
+          <a href="index.html" class="shop-btn">
             Continue Shopping
           </a>
 
@@ -645,7 +478,6 @@ function renderCart(){
     `;
 
     updateCartCountDisplay();
-
     return;
 
   }
@@ -659,16 +491,11 @@ function renderCart(){
       <div class="cart-items">
   `;
 
-  items.forEach(function(item){
+  items.forEach(function(id){
 
-    const product =
-      findProduct(item.id);
-
-    const quantity =
-      Math.max(1,Number(item.quantity) || 1);
-
-    const itemTotal =
-      Number(product.price) * quantity;
+    const product = findProduct(id);
+    const quantity = Math.max(1, Number(cart[id]) || 1);
+    const itemTotal = Number(product.price) * quantity;
 
     subtotal += itemTotal;
     totalItems += quantity;
@@ -683,9 +510,7 @@ function renderCart(){
 
         <div>
 
-          <h3>
-            ${product.name}
-          </h3>
+          <h3>${product.name}</h3>
 
           <div class="category">
             ${product.category}
@@ -697,19 +522,13 @@ function renderCart(){
 
           <div class="quantity">
 
-            <button
-              onclick="changeQuantity('${product.id}', -1)"
-            >
+            <button onclick="changeQuantity('${product.id}', -1)">
               −
             </button>
 
-            <span>
-              ${quantity}
-            </span>
+            <span>${quantity}</span>
 
-            <button
-              onclick="changeQuantity('${product.id}', 1)"
-            >
+            <button onclick="changeQuantity('${product.id}', 1)">
               +
             </button>
 
@@ -740,9 +559,7 @@ function renderCart(){
 
       <aside class="summary">
 
-        <h2>
-          Order Summary
-        </h2>
+        <h2>Order Summary</h2>
 
         <div class="summary-row">
           <span>Items</span>
@@ -764,17 +581,11 @@ function renderCart(){
           <span>৳${subtotal.toLocaleString()}</span>
         </div>
 
-        <a
-          href="checkout.html"
-          class="checkout-btn"
-        >
+        <a href="checkout.html" class="checkout-btn">
           Proceed to Checkout
         </a>
 
-        <a
-          href="index.html"
-          class="continue-btn"
-        >
+        <a href="index.html" class="continue-btn">
           ← Continue Shopping
         </a>
 
@@ -793,27 +604,26 @@ function renderCart(){
 
 function changeQuantity(id, change){
 
-  const normalized =
-    normalizeCart();
+  const cart = getCartData();
 
-  const item =
-    normalized.items.find(function(item){
-
-      return String(item.id) === String(id);
-
-    });
-
-  if(!item){
+  if(!cart[id]){
     return;
   }
 
-  item.quantity =
-    Math.max(
-      1,
-      Number(item.quantity) + Number(change)
-    );
+  const newQuantity =
+    Number(cart[id]) + Number(change);
 
-  saveCart(normalized.items);
+  if(newQuantity <= 0){
+
+    delete cart[id];
+
+  }else{
+
+    cart[id] = newQuantity;
+
+  }
+
+  saveCartData(cart);
 
   renderCart();
 
@@ -822,17 +632,11 @@ function changeQuantity(id, change){
 
 function removeFromCart(id){
 
-  const normalized =
-    normalizeCart();
+  const cart = getCartData();
 
-  const filtered =
-    normalized.items.filter(function(item){
+  delete cart[id];
 
-      return String(item.id) !== String(id);
-
-    });
-
-  saveCart(filtered);
+  saveCartData(cart);
 
   renderCart();
 
@@ -841,18 +645,17 @@ function removeFromCart(id){
 
 function updateCartCountDisplay(){
 
+  const cart = getCartData();
+
   let count = 0;
 
-  const normalized =
-    normalizeCart();
+  Object.keys(cart).forEach(function(id){
 
-  normalized.items.forEach(function(item){
+    const quantity = Number(cart[id]) || 0;
 
-    count +=
-      Math.max(
-        1,
-        Number(item.quantity) || 1
-      );
+    if(findProduct(id) && quantity > 0){
+      count += quantity;
+    }
 
   });
 
