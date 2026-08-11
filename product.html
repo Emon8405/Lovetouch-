@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Product Details | Lovetouch</title>
+<meta name="description" content="View product details and shop online at Lovetouch.">
 
 <link rel="stylesheet" href="style.css">
 
 <style>
+body{
+  margin:0;
+  background:#f5f5f5;
+  font-family:Arial,sans-serif;
+}
 
 header{
   background:#131921;
+  color:white;
   padding:12px 5%;
   display:flex;
   align-items:center;
@@ -26,20 +29,33 @@ header{
   color:#ff9900;
   font-size:28px;
   font-weight:bold;
+  text-decoration:none;
+  white-space:nowrap;
 }
 
 .search{
   flex:1;
+  display:flex;
 }
 
 .search input{
   width:100%;
   padding:13px;
   border:0;
+  outline:0;
+  font-size:16px;
+}
+
+.search button{
+  padding:0 20px;
+  border:0;
+  background:#ff9900;
+  font-size:18px;
 }
 
 .header-link{
   color:white;
+  text-decoration:none;
   font-weight:bold;
   white-space:nowrap;
 }
@@ -51,13 +67,24 @@ nav{
 
 nav a{
   color:white;
+  text-decoration:none;
   margin-right:25px;
 }
 
 .product-page{
   max-width:1100px;
-  margin:35px auto;
-  padding:20px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.breadcrumb{
+  margin-bottom:20px;
+  color:#666;
+}
+
+.breadcrumb a{
+  color:#222;
+  text-decoration:none;
 }
 
 .product-box{
@@ -67,98 +94,121 @@ nav a{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:40px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
-.product-photo{
+.product-image-large{
   min-height:420px;
   background:#eee;
-  border-radius:10px;
+  border-radius:8px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:150px;
+  font-size:160px;
 }
 
-.product-title{
-  font-size:35px;
-  margin-bottom:12px;
+.product-details h1{
+  font-size:36px;
+  margin:0 0 15px;
 }
 
-.product-rating{
-  color:#f5a623;
-  margin-bottom:15px;
+.rating{
+  margin:10px 0;
+  font-size:20px;
 }
 
-.product-price{
-  font-size:32px;
+.category{
+  color:#666;
+  margin:12px 0;
+}
+
+.price{
+  font-size:30px;
   font-weight:bold;
-  margin:15px 0;
+  margin:20px 0;
 }
 
-.product-old-price{
-  color:#777;
+.old-price{
+  font-size:18px;
+  color:#888;
   text-decoration:line-through;
-  font-size:17px;
   margin-left:10px;
-}
-
-.stock{
-  color:green;
-  margin:15px 0;
+  font-weight:normal;
 }
 
 .description{
-  line-height:1.7;
   color:#555;
+  line-height:1.7;
   margin:20px 0;
 }
 
-.quantity{
+.quantity-box{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   margin:20px 0;
 }
 
-.quantity button{
-  width:40px;
-  height:40px;
+.quantity-box input{
+  width:70px;
+  padding:12px;
   border:1px solid #ccc;
-  background:white;
-  font-size:22px;
-}
-
-.quantity span{
-  width:40px;
+  border-radius:5px;
   text-align:center;
-  font-weight:bold;
-}
-
-.action-btn{
-  width:100%;
-  padding:15px;
-  border:0;
-  border-radius:6px;
-  font-weight:bold;
-  font-size:16px;
-  margin-top:10px;
 }
 
 .add-cart{
+  width:100%;
   background:#ffd814;
+  border:0;
+  padding:15px;
+  border-radius:6px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-.buy-now{
-  background:#ff9900;
-}
-
-.back{
+.back-btn{
   display:inline-block;
-  margin-top:20px;
-  color:#0066c0;
+  margin-top:15px;
+  background:#232f3e;
+  color:white;
+  text-decoration:none;
+  padding:12px 20px;
+  border-radius:5px;
 }
 
-@media(max-width:800px){
+.message{
+  margin-top:15px;
+  padding:12px;
+  background:#e8f5e9;
+  color:#256029;
+  border-radius:5px;
+  display:none;
+}
+
+footer{
+  background:#131921;
+  color:white;
+  padding:40px 5%;
+  margin-top:30px;
+  text-align:center;
+}
+
+@media(max-width:700px){
+  .product-box{
+    grid-template-columns:1fr;
+    padding:20px;
+  }
+
+  .product-image-large{
+    min-height:280px;
+    font-size:110px;
+  }
+
+  .product-details h1{
+    font-size:28px;
+  }
 
   header{
     flex-wrap:wrap;
@@ -168,327 +218,246 @@ nav a{
     order:3;
     flex-basis:100%;
   }
-
-  .product-box{
-    grid-template-columns:1fr;
-  }
-
-  .product-photo{
-    min-height:300px;
-    font-size:100px;
-  }
-
 }
-
 </style>
-
 </head>
 
 <body>
 
 <header>
 
-<a href="index.html" class="logo">
-Lovetouch
-</a>
+<a href="index.html" class="logo">Lovetouch</a>
 
 <div class="search">
-
-<input
-type="search"
-placeholder="Search products..."
->
-
+<input id="searchInput" type="search" placeholder="Search products...">
+<button onclick="searchProducts()">🔍</button>
 </div>
 
-<a href="login.html"
-class="header-link">
-👤 Account
-</a>
+<a href="login.html" class="header-link">👤 Account</a>
 
-<a href="cart.html"
-class="header-link">
-🛒 Cart
+<a href="cart.html" class="header-link">
+🛒 Cart (<span id="cartCount">0</span>)
 </a>
 
 </header>
 
 <nav>
-
-<a href="index.html">
-Home
-</a>
-
-<a href="index.html#categories">
-Categories
-</a>
-
-<a href="index.html#products">
-Products
-</a>
-
+<a href="index.html">Home</a>
+<a href="index.html#categories">Categories</a>
+<a href="index.html#products">Products</a>
+<a href="index.html#deals">Deals</a>
 </nav>
 
 <main class="product-page">
 
-<div class="product-box">
-
-<div
-class="product-photo"
-id="productImage"
->
-🛍️
+<div class="breadcrumb">
+<a href="index.html">Home</a> › Product Details
 </div>
 
-<div>
-
-<div
-id="productCategory"
->
-Product
-</div>
-
-<h1
-class="product-title"
-id="productName"
->
-Loading...
-</h1>
-
-<div
-class="product-rating"
-id="productRating"
->
-</div>
-
-<div
-class="product-price"
-id="productPrice"
->
-</div>
-
-<div
-id="productStock"
-class="stock"
->
-</div>
-
-<p
-id="productDescription"
-class="description"
->
-</p>
-
-<div class="quantity">
-
-<button
-onclick="changeQuantity(-1)"
->
-−
-</button>
-
-<span id="quantity">
-1
-</span>
-
-<button
-onclick="changeQuantity(1)"
->
-+
-</button>
-
-</div>
-
-<button
-class="action-btn add-cart"
-onclick="addCurrentProduct()"
->
-🛒 Add to Cart
-</button>
-
-<button
-class="action-btn buy-now"
-onclick="buyNow()"
->
-⚡ Buy Now
-</button>
-
-<a
-href="index.html"
-class="back"
->
-← Continue Shopping
-</a>
-
-</div>
-
+<div class="product-box" id="productContainer">
+Loading product...
 </div>
 
 </main>
 
 <footer>
-
-<h2>
-Lovetouch
-</h2>
-
-<p>
-© 2026 Lovetouch. All Rights Reserved.
-</p>
-
+<h2>Lovetouch</h2>
+<p>Your online shopping destination.</p>
+<p>© 2026 Lovetouch. All Rights Reserved.</p>
 </footer>
 
 <script src="products.js"></script>
-
 <script src="app.js"></script>
 
 <script>
 
-let quantity = 1;
+function getProductId(){
 
-const params =
-new URLSearchParams(
-window.location.search
-);
+  const params = new URLSearchParams(window.location.search);
 
-const productId =
-params.get("id");
-
-const product =
-products.find(function(item){
-
-  return item.id === productId;
-
-});
-
-
-function showProduct(){
-
-  if(!product){
-
-    document.getElementById(
-      "productName"
-    ).textContent =
-      "Product Not Found";
-
-    return;
-
-  }
-
-  document.getElementById(
-    "productImage"
-  ).textContent =
-    product.icon;
-
-  document.getElementById(
-    "productCategory"
-  ).textContent =
-    product.category;
-
-  document.getElementById(
-    "productName"
-  ).textContent =
-    product.name;
-
-  document.getElementById(
-    "productRating"
-  ).textContent =
-    "⭐".repeat(product.rating);
-
-  document.getElementById(
-    "productPrice"
-  ).innerHTML =
-    `৳${product.price.toLocaleString()}
-     <span class="product-old-price">
-     ৳${product.oldPrice.toLocaleString()}
-     </span>`;
-
-  document.getElementById(
-    "productStock"
-  ).textContent =
-    product.stock > 0
-      ? "✓ In Stock"
-      : "Out of Stock";
-
-  document.getElementById(
-    "productDescription"
-  ).textContent =
-    product.description;
+  return params.get("id");
 
 }
 
 
-function changeQuantity(change){
+function updateCartCount(){
 
-  quantity += change;
+  if(typeof getCartItemCount === "function"){
 
-  if(quantity < 1){
-    quantity = 1;
-  }
-
-  if(product &&
-     quantity > product.stock){
-
-    quantity = product.stock;
+    document.getElementById("cartCount").textContent =
+      getCartItemCount();
 
   }
-
-  document.getElementById(
-    "quantity"
-  ).textContent =
-    quantity;
 
 }
 
 
-function addCurrentProduct(){
+function searchProducts(){
 
-  if(!product){
-    return;
-  }
+  const value =
+    document.getElementById("searchInput").value.trim();
 
-  if(product.stock <= 0){
+  if(value){
 
-    alert("Product is out of stock.");
-
-    return;
+    window.location.href =
+      "index.html?search=" + encodeURIComponent(value);
 
   }
 
-  addProductToCart(
-    product.id,
-    quantity
-  );
+}
 
-  alert(
+
+function getDescription(product){
+
+  if(product.description){
+    return product.description;
+  }
+
+  return "Discover the " +
     product.name +
-    " added to cart!"
-  );
+    " at Lovetouch. Enjoy quality products, great prices and a simple online shopping experience.";
 
 }
 
 
-function buyNow(){
+function renderProduct(){
+
+  const id = getProductId();
+
+  const product =
+    products.find(function(item){
+      return String(item.id) === String(id);
+    });
+
+  const container =
+    document.getElementById("productContainer");
 
   if(!product){
+
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:50px">
+        <h2>Product Not Found</h2>
+        <p>The product you are looking for is not available.</p>
+        <a href="index.html" class="back-btn">← Back to Store</a>
+      </div>
+    `;
+
     return;
   }
 
-  addProductToCart(
-    product.id,
-    quantity
-  );
+  const stars =
+    "⭐".repeat(Number(product.rating) || 0);
 
-  window.location.href =
-    "cart.html";
+  container.innerHTML = `
+
+    <div class="product-image-large">
+      ${product.icon || "🛍️"}
+    </div>
+
+    <div class="product-details">
+
+      <h1>${product.name}</h1>
+
+      <div class="rating">
+        ${stars}
+      </div>
+
+      <div class="category">
+        Category: <strong>${product.category}</strong>
+      </div>
+
+      <div class="price">
+        ৳${Number(product.price).toLocaleString()}
+
+        ${
+          product.oldPrice
+          ? `<span class="old-price">
+              ৳${Number(product.oldPrice).toLocaleString()}
+             </span>`
+          : ""
+        }
+
+      </div>
+
+      <p class="description">
+        ${getDescription(product)}
+      </p>
+
+      <div class="quantity-box">
+        <label for="quantity"><strong>Quantity:</strong></label>
+
+        <input
+          id="quantity"
+          type="number"
+          min="1"
+          value="1"
+        >
+      </div>
+
+      <button
+        class="add-cart"
+        onclick="addToCartFromDetails('${product.id}')"
+      >
+        🛒 Add to Cart
+      </button>
+
+      <div id="message" class="message">
+        Product added to cart successfully!
+      </div>
+
+      <a href="index.html" class="back-btn">
+        ← Continue Shopping
+      </a>
+
+    </div>
+
+  `;
 
 }
 
 
-showProduct();
+function addToCartFromDetails(id){
+
+  const quantity =
+    Math.max(
+      1,
+      parseInt(
+        document.getElementById("quantity").value
+      ) || 1
+    );
+
+  /*
+    Use the existing cart function from app.js.
+    The loop allows this page to work with the
+    existing one-item-at-a-time cart function.
+  */
+
+  if(typeof addProductToCart === "function"){
+
+    for(let i = 0; i < quantity; i++){
+      addProductToCart(id);
+    }
+
+    updateCartCount();
+
+    const message =
+      document.getElementById("message");
+
+    message.style.display = "block";
+
+  }else{
+
+    alert("Cart system is not available.");
+
+  }
+
+}
+
+
+renderProduct();
+updateCartCount();
 
 </script>
 
 </body>
-
-  </html>
+</html>
