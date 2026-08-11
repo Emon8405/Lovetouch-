@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Account | Lovetouch</title>
+<meta name="description" content="View your Lovetouch orders and order status.">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#f5f5f5;
+  color:#222;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  background:#131921;
+  color:white;
+  padding:12px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.logo{
+  color:#ff9900;
+  font-size:24px;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.header-links{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+.header-links a{
+  color:white;
+  text-decoration:none;
+}
+
+.logout{
+  background:#dc3545;
+  color:white;
+  border:0;
+  padding:9px 15px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+nav{
+  background:#232f3e;
+  padding:11px 5%;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  margin-right:25px;
+}
+
+main{
+  width:90%;
+  max-width:1000px;
+  margin:35px auto;
+}
+
+.account-box,
+.orders-box{
+  background:white;
+  border-radius:8px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  padding:22px;
+  margin-bottom:20px;
+}
+
+.account-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.account-title h1{
+  margin:0;
+  font-size:28px;
+}
+
+.subtitle{
+  color:#666;
+  margin-top:10px;
+}
+
+.order-card{
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin-top:18px;
+  overflow:hidden;
+  background:white;
+}
+
+.order-head{
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid #eee;
+}
+
+.order-id{
+  font-weight:bold;
+}
+
+.order-date{
+  color:#666;
+  font-size:13px;
+  margin-top:5px;
+}
+
+.status{
+  padding:7px 12px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.status-new{background:#fff1b8}
+.status-processing{background:#dcecff}
+.status-shipped{background:#e3e8ff}
+.status-delivered{background:#d9f7e5}
+.status-cancelled{background:#ffdede}
+
+.info{
+  background:#f8f8f8;
+  margin:12px;
+  padding:15px;
+  border-radius:6px;
+  line-height:1.7;
+}
+
+.products{
+  padding:5px 15px 15px;
+}
+
+.product-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+}
+
+.product-name{
+  font-weight:500;
+}
+
+.product-qty{
+  color:#666;
+}
+
+.total{
+  text-align:right;
+  padding:15px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.empty,
+.loading,
+.error{
+  text-align:center;
+  padding:45px 20px;
+  color:#666;
+}
+
+.error{
+  color:#b00020;
+  background:#ffe5e5;
+  border-radius:6px;
+}
+
+.shop-btn{
+  display:inline-block;
+  margin-top:15px;
+  background:#ffd814;
+  color:#222;
+  text-decoration:none;
+  padding:12px 22px;
+  border-radius:5px;
+  font-weight:bold;
+}
+
+footer{
+  background:#131921;
+  color:white;
+  text-align:center;
+  padding:35px 5%;
+  margin-top:40px;
+}
+
+@media(max-width:600px){
+  header{
+    flex-wrap:wrap;
+  }
+
+  .header-links{
+    width:100%;
+    justify-content:flex-end;
+  }
+
+  nav a{
+    margin-right:14px;
+  }
+
+  main{
+    width:94%;
+    margin:20px auto;
+  }
+
+  .order-head{
+    flex-direction:column;
+  }
+
+  .status{
+    align-self:flex-start;
+  }
+
+  .product-row{
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">Lovetouch</a>
+
+  <div class="header-links">
+    <a href="index.html">Home</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="logout" onclick="logoutCustomer()">Logout</button>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="index.html#categories">Categories</a>
+  <a href="index.html#products">Products</a>
+  <a href="cart.html">Cart</a>
+</nav>
+
+<main>
+
+  <section class="account-box">
+    <div class="account-title">
+      <span style="font-size:30px">👤</span>
+      <h1>My Account</h1>
+    </div>
+
+    <p class="subtitle">Customer account</p>
+
+    <div id="customerInfo"></div>
+  </section>
+
+  <section class="orders-box">
+    <h2>📦 My Orders</h2>
+
+    <div id="orders">
+      <div class="loading">Loading your orders...</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <h2>Lovetouch</h2>
+  <p>Your online shopping destination.</p>
+  <p>© 2026 Lovetouch. All Rights Reserved.</p>
+</footer>
+
+<script src="products.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL =
+  "https://yaukdrdygrlpdrhzpbvv.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_So5A7k5nsnnKyvC-MkiTMw_t6Q9poOO";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+function escapeHTML(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function getLocalOrders(){
+  try{
+    return JSON.parse(
+      localStorage.getItem("lovetouchOrders")
+    ) || [];
+  }catch(error){
+    return [];
+  }
+}
+
+
+function formatDate(value){
+  if(!value) return "";
+
+  const date = new Date(value);
+
+  if(Number.isNaN(date.getTime())){
+    return value;
+  }
+
+  return date.toLocaleString("en-GB",{
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+}
+
+
+function statusClass(status){
+  const s = String(status || "New").toLowerCase();
+
+  if(s.includes("processing")) return "status-processing";
+  if(s.includes("shipped")) return "status-shipped";
+  if(s.includes("delivered")) return "status-delivered";
+  if(s.includes("cancel")) return "status-cancelled";
+
+  return "status-new";
+}
+
+
+function productName(productId){
+  if(typeof products === "undefined"){
+    return productId;
+  }
+
+  const product =
+    products.find(
+      p => String(p.id) === String(productId)
+    );
+
+  return product ? product.name : productId;
+}
+
+
+function formatItems(items){
+  if(!items) return "";
+
+  let cart = items;
+
+  if(typeof items === "string"){
+    try{
+      cart = JSON.parse(items);
+    }catch(error){
+      return escapeHTML(items);
+    }
+  }
+
+  if(Array.isArray(cart)){
+    return cart.map(function(item){
+      const id =
+        item.id ||
+        item.product_id ||
+        item.productId ||
+        "";
+
+      const qty =
+        Number(
+          item.quantity ||
+          item.qty ||
+          1
+        );
+
+      return `
+        <div class="product-row">
+          <div>
+            <div class="product-name">
+              ${escapeHTML(
+                item.name ||
+                productName(id)
+              )}
+            </div>
+            <div class="product-qty">
+              × ${qty}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  return Object.keys(cart).map(function(id){
+
+    const qty =
+      Number(cart[id]) || 0;
+
+    return `
+      <div class="product-row">
+        <div>
+          <div class="product-name">
+            ${escapeHTML(
+              productName(id)
+            )}
+          </div>
+
+          <div class="product-qty">
+            Product ID: ${escapeHTML(id)}
+          </div>
+        </div>
+
+        <strong>× ${qty}</strong>
+      </div>
+    `;
+
+  }).join("");
+}
+
+
+function renderOrders(orders){
+
+  const container =
+    document.getElementById("orders");
+
+  if(!orders.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        <h3>No orders found</h3>
+        <p>Your orders will appear here after you place an order.</p>
+        <a href="index.html" class="shop-btn">
+          Start Shopping
+        </a>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    orders.map(function(order){
+
+      const status =
+        order.status || "New";
+
+      const customerName =
+        order.customer_name ||
+        order.customer?.name ||
+        "Customer";
+
+      const phone =
+        order.phone ||
+        order.customer?.phone ||
+        "";
+
+      const district =
+        order.district ||
+        order.customer?.district ||
+        "";
+
+      const address =
+        order.address ||
+        order.customer?.address ||
+        "";
+
+      const payment =
+        order.payment_method ||
+        order.payment ||
+        "";
+
+      const total =
+        Number(order.total || 0);
+
+
+      return `
+        <article class="order-card">
+
+          <div class="order-head">
+
+            <div>
+              <div class="order-id">
+                Order ID: ${escapeHTML(
+                  order.order_id ||
+                  order.id ||
+                  ""
+                )}
+              </div>
+
+              <div class="order-date">
+                ${escapeHTML(
+                  formatDate(
+                    order.created_at ||
+                    order.date
+                  )
+                )}
+              </div>
+            </div>
+
+            <span class="status ${statusClass(status)}">
+              ${escapeHTML(status)}
+            </span>
+
+          </div>
+
+
+          <div class="info">
+
+            <strong>Delivery Information</strong>
+
+            <div>
+              Name:
+              ${escapeHTML(customerName)}
+            </div>
+
+            <div>
+              Phone:
+              ${escapeHTML(phone)}
+            </div>
+
+            <div>
+              District:
+              ${escapeHTML(district)}
+            </div>
+
+            <div>
+              Address:
+              ${escapeHTML(address)}
+            </div>
+
+            <div>
+              Payment:
+              ${escapeHTML(payment)}
+            </div>
+
+          </div>
+
+
+          <div class="products">
+
+            <strong>Products</strong>
+
+            ${formatItems(order.items)}
+
+          </div>
+
+
+          <div class="total">
+            Total:
+            ৳${total.toLocaleString()}
+          </div>
+
+        </article>
+      `;
+
+    }).join("");
+}
+
+
+async function loadOrders(){
+
+  const localOrders =
+    getLocalOrders();
+
+  const ids =
+    localOrders
+      .map(function(order){
+        return order.id ||
+               order.order_id;
+      })
+      .filter(Boolean);
+
+
+  if(ids.length === 0){
+
+    renderOrders([]);
+
+    return;
+  }
+
+
+  /*
+    The browser remembers the customer's
+    own order IDs after checkout.
+
+    We only request those orders from Supabase.
+  */
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .in("order_id", ids)
+      .order("created_at",{
+        ascending:false
+      });
+
+
+  if(error){
+
+    console.error(
+      "Account orders error:",
+      error
+    );
+
+    /*
+      If database reading fails,
+      show the customer's local orders
+      instead of a blank page.
+    */
+
+    const fallback =
+      localOrders.map(function(order){
+
+        return {
+          order_id: order.id,
+          customer_name:
+            order.customer?.name,
+          phone:
+            order.customer?.phone,
+          district:
+            order.customer?.district,
+          address:
+            order.customer?.address,
+          payment_method:
+            order.payment,
+          items:
+            order.items,
+          total:0,
+          status:"New",
+          date:order.date
+        };
+
+      });
+
+    renderOrders(fallback);
+
+    return;
+  }
+
+
+  renderOrders(data || []);
+
+
+  if(data && data.length){
+
+    const first =
+      data[0];
+
+    document.getElementById(
+      "customerInfo"
+    ).innerHTML = `
+      <p>
+        <strong>
+          ${escapeHTML(
+            first.customer_name || "Customer"
+          )}
+        </strong>
+      </p>
+    `;
+  }
+}
+
+
+function logoutCustomer(){
+
+  /*
+    Customer logout only clears the
+    customer-side remembered orders.
+    It does NOT delete orders from Supabase.
+  */
+
+  localStorage.removeItem(
+    "lovetouchOrders"
+  );
+
+  window.location.href =
+    "index.html";
+}
+
+
+loadOrders();
+</script>
+
+</body>
+</html>
