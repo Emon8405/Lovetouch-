@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Track Order | Lovetouch</title>
+
+<meta name="description"
+content="Track your Lovetouch order using your Order ID and phone number.">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#f5f5f5;
+  font-family:Arial,sans-serif;
+  color:#222;
+}
+
+header{
+  background:#131921;
+  color:white;
+  padding:12px 5%;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.logo{
+  color:#ff9900;
+  font-size:28px;
+  font-weight:bold;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.search{
+  flex:1;
+  display:flex;
+}
+
+.search input{
+  width:100%;
+  padding:13px;
+  border:0;
+  outline:0;
+  font-size:16px;
+}
+
+.search button{
+  padding:0 20px;
+  border:0;
+  background:#ff9900;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.header-link{
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+nav{
+  background:#232f3e;
+  padding:12px 5%;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  margin-right:25px;
+}
+
+.page{
+  max-width:1000px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.page-title{
+  margin-bottom:10px;
+}
+
+.page-subtitle{
+  color:#666;
+  margin-bottom:25px;
+}
+
+.tracking-box{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  margin-bottom:25px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:15px;
+  align-items:end;
+}
+
+.field label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.field input{
+  width:100%;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:5px;
+  font-size:16px;
+}
+
+.track-btn{
+  border:0;
+  background:#ffd814;
+  color:#111;
+  padding:13px 22px;
+  border-radius:5px;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.track-btn:hover{
+  background:#f7ca00;
+}
+
+.message{
+  display:none;
+  margin-top:18px;
+  padding:13px;
+  border-radius:5px;
+  background:#fdecec;
+  color:#a00000;
+}
+
+.order-card{
+  display:none;
+  background:white;
+  border-radius:10px;
+  padding:25px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.order-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  border-bottom:1px solid #ddd;
+  padding-bottom:18px;
+  margin-bottom:20px;
+}
+
+.order-id{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.status{
+  padding:8px 14px;
+  border-radius:20px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+.status-processing{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.status-pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.status-shipped{
+  background:#cfe2ff;
+  color:#084298;
+}
+
+.status-delivered{
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.status-cancelled{
+  background:#f8d7da;
+  color:#842029;
+}
+
+.status-default{
+  background:#e2e3e5;
+  color:#41464b;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.info-box{
+  background:#f8f8f8;
+  padding:15px;
+  border-radius:6px;
+}
+
+.info-label{
+  color:#777;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.info-value{
+  font-weight:bold;
+}
+
+.items-box{
+  border-top:1px solid #ddd;
+  padding-top:20px;
+}
+
+.items-box h3{
+  margin-top:0;
+}
+
+.item-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+}
+
+.item-name{
+  font-weight:bold;
+}
+
+.item-quantity{
+  color:#666;
+}
+
+.summary{
+  margin-top:20px;
+  margin-left:auto;
+  max-width:400px;
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  color:#555;
+}
+
+.summary-total{
+  display:flex;
+  justify-content:space-between;
+  border-top:1px solid #ddd;
+  padding-top:14px;
+  margin-top:8px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.timeline{
+  display:flex;
+  justify-content:space-between;
+  margin:30px 0 10px;
+  position:relative;
+}
+
+.timeline:before{
+  content:"";
+  position:absolute;
+  top:15px;
+  left:8%;
+  right:8%;
+  height:3px;
+  background:#ddd;
+  z-index:0;
+}
+
+.step{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  width:25%;
+}
+
+.step-circle{
+  width:32px;
+  height:32px;
+  margin:auto;
+  border-radius:50%;
+  background:#ddd;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.step.active .step-circle{
+  background:#ff9900;
+  color:#111;
+}
+
+.step-label{
+  margin-top:8px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.empty{
+  text-align:center;
+  padding:40px 20px;
+  color:#666;
+}
+
+.continue-btn{
+  display:inline-block;
+  background:#232f3e;
+  color:white;
+  text-decoration:none;
+  padding:12px 20px;
+  border-radius:5px;
+  margin-top:15px;
+}
+
+footer{
+  background:#131921;
+  color:white;
+  padding:40px 5%;
+  margin-top:40px;
+  text-align:center;
+}
+
+@media(max-width:750px){
+
+  header{
+    flex-wrap:wrap;
+  }
+
+  .search{
+    order:3;
+    flex-basis:100%;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .track-btn{
+    width:100%;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .order-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .timeline{
+    overflow-x:auto;
+  }
+
+  .step{
+    min-width:100px;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<a
+href="index.html"
+class="logo"
+>
+Lovetouch
+</a>
+
+
+<div class="search">
+
+<input
+id="searchInput"
+type="search"
+placeholder="Search products..."
+>
+
+<button
+onclick="searchProducts()"
+>
+🔍
+</button>
+
+</div>
+
+
+<a
+href="login.html"
+class="header-link"
+>
+👤 Account
+</a>
+
+
+<a
+href="cart.html"
+class="header-link"
+>
+🛒 Cart
+</a>
+
+</header>
+
+
+<nav>
+
+<a href="index.html">
+Home
+</a>
+
+<a href="index.html#categories">
+Categories
+</a>
+
+<a href="index.html#products">
+Products
+</a>
+
+<a href="index.html#deals">
+Deals
+</a>
+
+</nav>
+
+
+<main class="page">
+
+<h1 class="page-title">
+📦 Track Your Order
+</h1>
+
+<p class="page-subtitle">
+Enter your Order ID and phone number to check your order status.
+</p>
+
+
+<section class="tracking-box">
+
+<div class="form-grid">
+
+<div class="field">
+
+<label for="orderId">
+Order ID
+</label>
+
+<input
+id="orderId"
+type="text"
+placeholder="Example: LT24145218"
+autocomplete="off"
+>
+
+</div>
+
+
+<div class="field">
+
+<label for="phone">
+Phone Number
+</label>
+
+<input
+id="phone"
+type="tel"
+placeholder="Example: 017XXXXXXXX"
+autocomplete="off"
+>
+
+</div>
+
+
+<button
+class="track-btn"
+onclick="trackOrder()"
+>
+Track Order
+</button>
+
+</div>
+
+
+<div
+id="message"
+class="message"
+></div>
+
+</section>
+
+
+<section
+id="orderCard"
+class="order-card"
+>
+
+<div class="order-header">
+
+<div>
+
+<div class="info-label">
+Order ID
+</div>
+
+<div
+id="displayOrderId"
+class="order-id"
+>
+-
+</div>
+
+</div>
+
+
+<div
+id="statusBadge"
+class="status status-default"
+>
+-
+</div>
+
+</div>
+
+
+<div class="info-grid">
+
+
+<div class="info-box">
+
+<div class="info-label">
+Customer
+</div>
+
+<div
+id="customerName"
+class="info-value"
+>
+-
+</div>
+
+</div>
+
+
+<div class="info-box">
+
+<div class="info-label">
+Phone
+</div>
+
+<div
+id="customerPhone"
+class="info-value"
+>
+-
+</div>
+
+</div>
+
+
+<div class="info-box">
+
+<div class="info-label">
+Delivery District
+</div>
+
+<div
+id="district"
+class="info-value"
+>
+-
+</div>
+
+</div>
+
+
+<div class="info-box">
+
+<div class="info-label">
+Address
+</div>
+
+<div
+id="address"
+class="info-value"
+>
+-
+</div>
+
+</div>
+
+
+<div class="info-box">
+
+<div class="info-label">
+Payment Method
+</div>
+
+<div
+id="paymentMethod"
+class="info-value"
+>
+-
+</div>
+
+</div>
+
+
+<div class="info-box">
+
+<div class="info-label">
+Order Date
+</div>
+
+<div
+id="createdAt"
+class="info-value"
+>
+-
+</div>
+
+</div>
+
+</div>
+
+
+<div class="timeline">
+
+<div
+id="stepPending"
+class="step"
+>
+
+<div class="step-circle">
+1
+</div>
+
+<div class="step-label">
+Pending
+</div>
+
+</div>
+
+
+<div
+id="stepProcessing"
+class="step"
+>
+
+<div class="step-circle">
+2
+</div>
+
+<div class="step-label">
+Processing
+</div>
+
+</div>
+
+
+<div
+id="stepShipped"
+class="step"
+>
+
+<div class="step-circle">
+3
+</div>
+
+<div class="step-label">
+Shipped
+</div>
+
+</div>
+
+
+<div
+id="stepDelivered"
+class="step"
+>
+
+<div class="step-circle">
+4
+</div>
+
+<div class="step-label">
+Delivered
+</div>
+
+</div>
+
+</div>
+
+
+<div class="items-box">
+
+<h3>
+🛍️ Order Items
+</h3>
+
+<div
+id="itemsList"
+>
+</div>
+
+</div>
+
+
+<div class="summary">
+
+<div class="summary-row">
+
+<span>
+Subtotal
+</span>
+
+<span id="subtotal">
+৳0
+</span>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+Delivery
+</span>
+
+<span id="delivery">
+৳0
+</span>
+
+</div>
+
+
+<div class="summary-total">
+
+<span>
+Total
+</span>
+
+<span id="total">
+৳0
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+<div
+id="emptyState"
+class="empty"
+>
+
+<p>
+Enter your Order ID and phone number above to track your order.
+</p>
+
+<a
+href="index.html"
+class="continue-btn"
+>
+← Continue Shopping
+</a>
+
+</div>
+
+</main>
+
+
+<footer>
+
+<h2>
+Lovetouch
+</h2>
+
+<p>
+Your online shopping destination.
+</p>
+
+<p>
+© 2026 Lovetouch. All Rights Reserved.
+</p>
+
+</footer>
+
+
+<script>
+
+/* =========================================
+   SUPABASE CONFIG
+========================================= */
+
+const SUPABASE_URL =
+"https://yaukdrdygrlpdrhzpbvv.supabase.co";
+
+const SUPABASE_ANON_KEY =
+"PASTE_YOUR_EXISTING_SUPABASE_ANON_KEY_HERE";
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+function searchProducts(){
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+  const value =
+    input.value.trim();
+
+  if(value){
+
+    window.location.href =
+      "index.html?search=" +
+      encodeURIComponent(value);
+
+  }
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(
+  text
+){
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+  message.textContent =
+    text;
+
+  message.style.display =
+    "block";
+
+}
+
+
+function hideMessage(){
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+  message.style.display =
+    "none";
+
+}
+
+
+/* =========================================
+   PHONE NORMALIZATION
+========================================= */
+
+function normalizePhone(
+  phone
+){
+
+  return String(phone)
+    .replace(/\s+/g,"")
+    .replace(/-/g,"")
+    .trim();
+
+}
+
+
+/* =========================================
+   STATUS CLASS
+========================================= */
+
+function getStatusClass(
+  status
+){
+
+  const value =
+    String(status || "")
+      .toLowerCase()
+      .trim();
+
+  if(value === "processing"){
+    return "status-processing";
+  }
+
+  if(value === "pending"){
+    return "status-pending";
+  }
+
+  if(value === "shipped"){
+    return "status-shipped";
+  }
+
+  if(value === "delivered"){
+    return "status-delivered";
+  }
+
+  if(value === "cancelled"){
+    return "status-cancelled";
+  }
+
+  return "status-default";
+
+}
+
+
+/* =========================================
+   TIMELINE
+========================================= */
+
+function updateTimeline(
+  status
+){
+
+  const value =
+    String(status || "")
+      .toLowerCase()
+      .trim();
+
+
+  const steps = [
+
+    {
+      id:"stepPending",
+      states:[
+        "pending",
+        "processing",
+        "shipped",
+        "delivered"
+      ]
+    },
+
+    {
+      id:"stepProcessing",
+      states:[
+        "processing",
+        "shipped",
+        "delivered"
+      ]
+    },
+
+    {
+      id:"stepShipped",
+      states:[
+        "shipped",
+        "delivered"
+      ]
+    },
+
+    {
+      id:"stepDelivered",
+      states:[
+        "delivered"
+      ]
+    }
+
+  ];
+
+
+  steps.forEach(
+    function(step){
+
+      const element =
+        document.getElementById(
+          step.id
+        );
+
+      element.classList.remove(
+        "active"
+      );
+
+
+      if(
+        step.states.includes(
+          value
+        )
+      ){
+
+        element.classList.add(
+          "active"
+        );
+
+      }
+
+    }
+  );
+
+
+  if(value === "cancelled"){
+
+    document
+      .getElementById(
+        "stepPending"
+      )
+      .classList.add(
+        "active"
+      );
+
+  }
+
+}
+
+
+/* =========================================
+   FORMAT DATE
+========================================= */
+
+function formatDate(
+  value
+){
+
+  if(!value){
+    return "-";
+  }
+
+  const date =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return value;
+
+  }
+
+  return date.toLocaleString();
+
+}
+
+
+/* =========================================
+   ITEMS
+========================================= */
+
+function renderItems(
+  items
+){
+
+  const container =
+    document.getElementById(
+      "itemsList"
+    );
+
+  container.innerHTML = "";
+
+
+  if(!items){
+
+    container.innerHTML =
+      "<p>No item information available.</p>";
+
+    return;
+
+  }
+
+
+  let parsed = items;
+
+
+  if(typeof items === "string"){
+
+    try{
+
+      parsed =
+        JSON.parse(items);
+
+    }catch(error){
+
+      container.innerHTML =
+        "<p>" +
+        String(items) +
+        "</p>";
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    !parsed ||
+    typeof parsed !== "object"
+  ){
+
+    container.innerHTML =
+      "<p>No item information available.</p>";
+
+    return;
+
+  }
+
+
+  Object.keys(parsed).forEach(
+    function(key){
+
+      const quantity =
+        parsed[key];
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "item-row";
+
+
+      const name =
+        document.createElement(
+          "span"
+        );
+
+      name.className =
+        "item-name";
+
+      name.textContent =
+        key;
+
+
+      const qty =
+        document.createElement(
+          "span"
+        );
+
+      qty.className =
+        "item-quantity";
+
+      qty.textContent =
+        "Quantity: " +
+        quantity;
+
+
+      row.appendChild(
+        name
+      );
+
+      row.appendChild(
+        qty
+      );
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   DISPLAY ORDER
+========================================= */
+
+function displayOrder(
+  order
+){
+
+  document.getElementById(
+    "displayOrderId"
+  ).textContent =
+    order.order_id || "-";
+
+
+  document.getElementById(
+    "customerName"
+  ).textContent =
+    order.customer_name || "-";
+
+
+  document.getElementById(
+    "customerPhone"
+  ).textContent =
+    order.phone || "-";
+
+
+  document.getElementById(
+    "district"
+  ).textContent =
+    order.district || "-";
+
+
+  document.getElementById(
+    "address"
+  ).textContent =
+    order.address || "-";
+
+
+  document.getElementById(
+    "paymentMethod"
+  ).textContent =
+    order.payment_method || "-";
+
+
+  document.getElementById(
+    "createdAt"
+  ).textContent =
+    formatDate(
+      order.created_at
+    );
+
+
+  const status =
+    order.status || "Pending";
+
+
+  const badge =
+    document.getElementById(
+      "statusBadge"
+    );
+
+
+  badge.textContent =
+    status;
+
+
+  badge.className =
+    "status " +
+    getStatusClass(
+      status
+    );
+
+
+  document.getElementById(
+    "subtotal"
+  ).textContent =
+    "৳" +
+    Number(
+      order.subtotal || 0
+    ).toLocaleString();
+
+
+  document.getElementById(
+    "delivery"
+  ).textContent =
+    "৳" +
+    Number(
+      order.delivery || 0
+    ).toLocaleString();
+
+
+  document.getElementById(
+    "total"
+  ).textContent =
+    "৳" +
+    Number(
+      order.total || 0
+    ).toLocaleString();
+
+
+  renderItems(
+    order.items
+  );
+
+
+  updateTimeline(
+    status
+  );
+
+
+  document.getElementById(
+    "orderCard"
+  ).style.display =
+    "block";
+
+
+  document.getElementById(
+    "emptyState"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =========================================
+   TRACK ORDER
+========================================= */
+
+async function trackOrder(){
+
+  hideMessage();
+
+
+  const orderId =
+    document
+      .getElementById(
+        "orderId"
+      )
+      .value
+      .trim();
+
+
+  const phone =
+    normalizePhone(
+      document
+        .getElementById(
+          "phone"
+        )
+        .value
+    );
+
+
+  if(!orderId){
+
+    showMessage(
+      "Please enter your Order ID."
+    );
+
+    return;
+
+  }
+
+
+  if(!phone){
+
+    showMessage(
+      "Please enter your phone number."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    SUPABASE_ANON_KEY ===
+    "PASTE_YOUR_EXISTING_SUPABASE_ANON_KEY_HERE"
+  ){
+
+    showMessage(
+      "Supabase configuration is incomplete. The existing Supabase anon key must be added."
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.querySelector(
+      ".track-btn"
+    );
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Searching...";
+
+
+  try{
+
+    const url =
+      SUPABASE_URL +
+      "/rest/v1/orders" +
+      "?order_id=eq." +
+      encodeURIComponent(
+        orderId
+      ) +
+      "&phone=eq." +
+      encodeURIComponent(
+        phone
+      ) +
+      "&select=*";
+
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+
+          headers:{
+            "apikey":
+              SUPABASE_ANON_KEY,
+
+            "Authorization":
+              "Bearer " +
+              SUPABASE_ANON_KEY
+          }
+        }
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "Unable to access order data."
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if(
+      !Array.isArray(data) ||
+      data.length === 0
+    ){
+
+      document.getElementById(
+        "orderCard"
+      ).style.display =
+        "none";
+
+
+      document.getElementById(
+        "emptyState"
+      ).style.display =
+        "block";
+
+
+      showMessage(
+        "No order found. Please check your Order ID and phone number."
+      );
+
+      return;
+
+    }
+
+
+    displayOrder(
+      data[0]
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Order tracking error:",
+      error
+    );
+
+
+    showMessage(
+      "Unable to load your order right now. Please try again."
+    );
+
+
+  }finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Track Order";
+
+  }
+
+}
+
+
+/* =========================================
+   ENTER KEY
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    document
+      .getElementById(
+        "orderId"
+      )
+      .addEventListener(
+        "keydown",
+        function(event){
+
+          if(
+            event.key ===
+            "Enter"
+          ){
+
+            trackOrder();
+
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "phone"
+      )
+      .addEventListener(
+        "keydown",
+        function(event){
+
+          if(
+            event.key ===
+            "Enter"
+          ){
+
+            trackOrder();
+
+          }
+
+        }
+      );
+
+  }
+);
+
+</script>
+
+</body>
+
+  </html>
