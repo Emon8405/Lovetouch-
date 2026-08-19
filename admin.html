@@ -357,7 +357,7 @@ Clear All Orders
 <div id="ordersList">
 
 <div class="loading">
-Checking login...
+Checking admin access...
 </div>
 
 </div>
@@ -366,13 +366,16 @@ Checking login...
 
 </main>
 
+
 <script src="products.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-/* SUPABASE */
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
   "https://yaukdrdygrlpdrhzpbvv.supabase.co";
@@ -387,17 +390,24 @@ const supabaseClient =
   );
 
 
-/* LOGIN PROTECTION */
+/* =========================================
+   ADMIN SECURITY
+========================================= */
 
 async function checkAdmin(){
 
+  /* Check active login session */
+
   const {
-    data
+    data: sessionData,
+    error: sessionError
   } =
     await supabaseClient.auth.getSession();
 
+
   if(
-    !data.session
+    sessionError ||
+    !sessionData.session
   ){
 
     window.location.href =
@@ -407,12 +417,44 @@ async function checkAdmin(){
 
   }
 
+
+  /* Check Admin permission */
+
+  const {
+    data: isAdmin,
+    error: adminError
+  } =
+    await supabaseClient
+      .rpc("is_admin");
+
+
+  if(
+    adminError ||
+    !isAdmin
+  ){
+
+    await supabaseClient.auth.signOut();
+
+    alert(
+      "Access denied. Admin account required."
+    );
+
+    window.location.href =
+      "login.html";
+
+    return false;
+
+  }
+
+
   return true;
 
 }
 
 
-/* LOGOUT */
+/* =========================================
+   LOGOUT
+========================================= */
 
 async function logout(){
 
@@ -420,6 +462,7 @@ async function logout(){
     error
   } =
     await supabaseClient.auth.signOut();
+
 
   if(error){
 
@@ -432,13 +475,16 @@ async function logout(){
 
   }
 
+
   window.location.href =
     "login.html";
 
 }
 
 
-/* MESSAGE */
+/* =========================================
+   MESSAGE
+========================================= */
 
 function showError(message){
 
@@ -470,7 +516,9 @@ function showSuccess(message){
 }
 
 
-/* LOAD ORDERS */
+/* =========================================
+   LOAD ORDERS
+========================================= */
 
 async function getOrders(){
 
@@ -488,6 +536,7 @@ async function getOrders(){
         }
       );
 
+
   if(error){
 
     console.error(error);
@@ -501,12 +550,15 @@ async function getOrders(){
 
   }
 
+
   return data || [];
 
 }
 
 
-/* STATUS CLASS */
+/* =========================================
+   STATUS CLASS
+========================================= */
 
 function getStatusClass(status){
 
@@ -514,41 +566,67 @@ function getStatusClass(status){
     String(status || "")
       .toLowerCase();
 
+
   if(
     value.includes("processing")
   ){
+
     return "status-processing";
+
   }
+
 
   if(
     value.includes("shipped")
   ){
+
     return "status-shipped";
+
   }
+
 
   if(
     value.includes("delivered")
   ){
+
     return "status-delivered";
+
   }
+
 
   if(
     value.includes("cancel")
   ){
+
     return "status-cancelled";
+
   }
+
 
   return "status-new";
 
 }
 
 
-/* UPDATE STATUS */
+/* =========================================
+   UPDATE STATUS
+========================================= */
 
 async function updateOrderStatus(
   id,
   status
 ){
+
+  const allowed =
+    await checkAdmin();
+
+
+  if(!allowed){
+
+    return;
+
+  }
+
 
   const {
     error
@@ -586,12 +664,15 @@ async function updateOrderStatus(
 }
 
 
-/* RENDER DASHBOARD */
+/* =========================================
+   RENDER DASHBOARD
+========================================= */
 
 async function renderDashboard(){
 
   const loggedIn =
     await checkAdmin();
+
 
   if(!loggedIn){
 
@@ -643,7 +724,7 @@ async function renderDashboard(){
     );
 
 
-  container.innerHTML="";
+  container.innerHTML = "";
 
 
   if(
@@ -684,7 +765,7 @@ async function renderDashboard(){
         "order-card";
 
 
-      let productsHTML="";
+      let productsHTML = "";
 
 
       const items =
@@ -698,7 +779,8 @@ async function renderDashboard(){
             const product =
               products.find(
                 p =>
-                  String(p.id) === String(productId)
+                  String(p.id) ===
+                  String(productId)
               );
 
 
@@ -803,6 +885,7 @@ async function renderDashboard(){
             Order Status
           </label>
 
+
           <select
             class="status-select"
             onchange="
@@ -891,6 +974,7 @@ async function renderDashboard(){
           Products
         </h3>
 
+
         ${productsHTML}
 
 
@@ -928,9 +1012,22 @@ async function renderDashboard(){
 }
 
 
-/* DELETE ONE ORDER */
+/* =========================================
+   DELETE ONE ORDER
+========================================= */
 
 async function deleteOrder(id){
+
+  const allowed =
+    await checkAdmin();
+
+
+  if(!allowed){
+
+    return;
+
+  }
+
 
   if(
     !confirm(
@@ -977,9 +1074,22 @@ async function deleteOrder(id){
 }
 
 
-/* CLEAR ALL */
+/* =========================================
+   CLEAR ALL ORDERS
+========================================= */
 
 async function clearOrders(){
+
+  const allowed =
+    await checkAdmin();
+
+
+  if(!allowed){
+
+    return;
+
+  }
+
 
   const orders =
     await getOrders();
@@ -1043,7 +1153,9 @@ async function clearOrders(){
 }
 
 
-/* START */
+/* =========================================
+   START
+========================================= */
 
 renderDashboard();
 
